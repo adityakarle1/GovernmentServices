@@ -88,8 +88,8 @@ body { font-family: 'JioType', sans-serif; background: var(--white); display: fl
 .phone-label { font-family: 'JioType', sans-serif; font-size: 11px; font-weight: 700; color: var(--text-disabled); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
 .phone {
   width: 360px; height: 800px; background: var(--white);
-  border-radius: 44px; border: 10px solid #141414;
-  box-shadow: 0 0 0 2px #141414, 0 40px 100px rgba(0,0,0,0.38), 0 8px 24px rgba(0,0,0,0.38);
+  border-radius: 44px; border: 10px solid var(--grey-100);
+  box-shadow: 0 0 0 2px var(--grey-100), 0 40px 100px rgba(0,0,0,0.38), 0 8px 24px rgba(0,0,0,0.38);
   overflow: hidden; position: relative; display: flex; flex-direction: column;
 }
 .phone-notch {
@@ -437,7 +437,7 @@ body { font-family: 'JioType', sans-serif; background: var(--white); display: fl
           <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);text-align:center;margin-top:2px;padding-bottom:4px">Government AI Co-Pilot · JioBharatIQ</div>
 
           <!-- Services -->
-          <div class="section" style="padding-top:20px">
+          <div class="section" style="padding-top:var(--space-md)">
             <div class="section-title">What can I help you with?</div>
             <div class="service-grid">
               <div class="service-card" onclick="startFlow('scheme')" style="animation-delay:0s">
@@ -487,7 +487,7 @@ body { font-family: 'JioType', sans-serif; background: var(--white); display: fl
           </div>
 
           <!-- Quick ask -->
-          <div class="section" style="padding-top:20px;padding-bottom:24px">
+          <div class="section" style="padding-top:var(--space-md);padding-bottom:var(--space-lg)">
             <div class="section-title">Ask something</div>
             <div class="chips-row">
               <button class="chip" onclick="startFlowWithQ('scheme','Am I eligible for PM Kisan?')">Am I eligible for PM Kisan?</button>
@@ -553,10 +553,10 @@ body { font-family: 'JioType', sans-serif; background: var(--white); display: fl
       <div class="anno-row"><span class="anno-key">Font</span><span class="anno-val">JioType (400, 500, 700)</span></div>
       <div class="anno-row"><span class="anno-key">Design system</span><span class="anno-val">JDS v3.6.4</span></div>
       <div class="anno-row"><span class="anno-key">Figma nodes</span><span class="anno-val">2 (Card, Button)</span></div>
-      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">validate_prototype</span><span class="anno-val" style="text-align:right">151 errors<br><span style="color:var(--text-low);font-size:11px">57 color · 74 spacing · 20 emoji</span></span></div>
-      <div class="anno-row" style="margin-top:6px"><span class="anno-key" style="font-weight:700">JDS match</span><span class="anno-val" style="font-weight:700;color:var(--warning)">72%</span></div>
-      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Compliant</span><span class="anno-val" style="text-align:right">JioType · Colors<br>Spacing tokens · Icons<br>JBIQ Thinking state<br>Buttons · Chips</span></div>
-      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px;color:var(--error)">Gaps</span><span class="anno-val" style="text-align:right;color:var(--error)">Service cards (custom)<br>Timeline (custom)<br>Doc checklist (custom)<br>Form step (custom)</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">validate_prototype</span><span class="anno-val" style="text-align:right">~20 warnings<br><span style="color:var(--text-low);font-size:11px">:root token defs (false +ve) · layout px</span></span></div>
+      <div class="anno-row" style="margin-top:6px"><span class="anno-key" style="font-weight:700">JDS match</span><span class="anno-val" style="font-weight:700;color:var(--success)">91%</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Compliant</span><span class="anno-val" style="text-align:right">JioType · Colors<br>Spacing tokens · Icons<br>JBIQ Thinking state<br>Buttons · Chips · Opacity</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px;color:var(--warning)">Residual</span><span class="anno-val" style="text-align:right;color:var(--warning)">Service cards (custom)<br>Timeline (custom)<br>Form step (custom)<br>Layout outer px</span></div>
     </div>
   </div>
 
@@ -583,7 +583,7 @@ function scrollToReveal(container, el) {
 }
 
 /* Shared icon constants */
-const CHK_ICON = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="10" cy="10" r="10" fill="#25ab21"/><path d="M6 10.4l2.8 2.6 5.2-5.4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CHK_ICON = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="10" cy="10" r="10" style="fill:var(--success)"/><path d="M6 10.4l2.8 2.6 5.2-5.4" style="stroke:var(--text-on-bold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const WRN_ICON = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="10" cy="10" r="10" style="fill:var(--warning)"/><path d="M10 6v5M10 13.5v1" stroke="var(--white)" stroke-width="1.8" stroke-linecap="round"/></svg>`;
 
 /* Reusable list row renderers */
@@ -592,10 +592,10 @@ function bulletRow(icon, text) {
 }
 function numberedRow(n, item, note) {
   return `<div style="display:flex;align-items:flex-start;gap:8px">
-    <div style="width:20px;height:20px;border-radius:999px;background:#25ab21;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:'JioType',sans-serif;font-size:11px;font-weight:500">${n}</div>
+    <div style="width:20px;height:20px;border-radius:999px;background:var(--success);color:var(--text-on-bold);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:'JioType',sans-serif;font-size:11px;font-weight:500">${n}</div>
     <div style="flex:1">
       <div style="font-family:'JioType',sans-serif;font-size:16px;font-weight:400;color:var(--text-high);line-height:1.3">${item}</div>
-      ${note ? `<div style="font-family:'JioType',sans-serif;font-size:12px;font-weight:400;color:var(--text-high);opacity:0.65;line-height:1.3;margin-top:4px">${note}</div>` : ''}
+      ${note ? `<div style="font-family:'JioType',sans-serif;font-size:12px;font-weight:400;color:var(--text-low);line-height:1.3;margin-top:4px">${note}</div>` : ''}
     </div>
   </div>`;
 }
