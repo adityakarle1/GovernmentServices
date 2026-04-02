@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarkar Saathi</title>
+<style>
+/* JioType */
+@font-face { font-family: 'JioType'; font-weight: 400; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 500; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'JioType'; font-weight: 700; src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+
+/* JDS Tokens */
+:root {
+  --primary-50: #3900ad;
+  --primary-20: #e8e8fc;
+  --primary-40: #6464ff;
+  --secondary-50: #f7ab20;
+  --secondary-20: #fef7e9;
+  --sparkle-50: #1eccb0;
+  --sparkle-20: #e8faf7;
+  --error: #fa2f40;
+  --success: #25ab21;
+  --warning: #f06d0f;
+  --grey-100: #141414;
+  --grey-60: #b5b5b5;
+  --grey-40: #e0e0e0;
+  --grey-20: #f5f5f5;
+  --white: #ffffff;
+  --surface-ghost: #eeeeef;
+  --surface-ghost-icon: #e7e9ff;
+  --surface-bold: #3900ad;
+  --surface-moderate: #e3e3e4;
+  --text-high: #141414;
+  --text-low: rgba(25,27,30,0.65);
+  --text-disabled: rgba(25,27,30,0.38);
+  --text-on-bold: #ffffff;
+  --icon-medium: #170054;
+  --stroke-subtle: rgba(36,38,43,0.12);
+  --pad-screen: 16px;
+  --pad-card: 14px;
+  --gap-block: 16px;
+  --gap-card: 12px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'JioType', sans-serif; background: var(--white); display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 200px;
+  background: var(--white);
+  border-right: 1px solid var(--stroke-subtle);
+  padding: 28px 0 20px;
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  display: flex; flex-direction: column;
+}
+.sidebar-logo { padding: 0 18px 20px; display: flex; align-items: center; gap: 8px; }
+.sidebar-logo-dot { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; width: 20px; height: 20px; }
+.sidebar-logo-dot span { border-radius: 50%; }
+.sidebar-app-name { font-family: 'JioType', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-high); }
+.sidebar-app-sub  { font-family: 'JioType', sans-serif; font-size: 11px; color: var(--text-disabled); font-weight: 500; }
+.sidebar-divider  { height: 1px; background: var(--stroke-subtle); margin: 0 18px 12px; }
+.sidebar-label    { font-family: 'JioType', sans-serif; font-size: 11px; font-weight: 700; color: var(--text-disabled); letter-spacing: 0.08em; text-transform: uppercase; padding: 0 18px 8px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 18px; cursor: pointer;
+  font-family: 'JioType', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-low);
+  border-left: 3px solid transparent; transition: all 0.15s;
+}
+.nav-item:hover { background: var(--grey-20); color: var(--text-high); }
+.nav-item.active { background: var(--primary-20); color: var(--primary-50); border-left-color: var(--primary-50); font-weight: 700; }
+.nav-item .nav-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--grey-60); }
+.nav-item.active .nav-icon { color: var(--primary-50); }
+.sidebar-footer { margin-top: auto; padding: 12px 18px 0; font-family: 'JioType', sans-serif; font-size: 11px; color: var(--text-disabled); border-top: 1px solid var(--stroke-subtle); }
+.sidebar-footer span { display: block; margin-top: 4px; }
+
+/* MAIN */
+.main { margin-left: 200px; flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 40px 48px; gap: 40px; }
+
+/* PHONE FRAME */
+.phone-wrap { display: flex; flex-direction: column; align-items: center; }
+.phone-label { font-family: 'JioType', sans-serif; font-size: 11px; font-weight: 700; color: var(--text-disabled); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.phone {
+  width: 360px; height: 800px; background: var(--white);
+  border-radius: 44px; border: 10px solid #141414;
+  box-shadow: 0 0 0 2px #141414, 0 40px 100px rgba(0,0,0,0.38), 0 8px 24px rgba(0,0,0,0.38);
+  overflow: hidden; position: relative; display: flex; flex-direction: column;
+}
+.phone-notch {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 26px; background: var(--grey-100);
+  border-radius: 0 0 16px 16px; z-index: 20;
+}
+
+/* Status bar */
+.status-bar {
+  height: 52px; background: var(--white);
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 10px 24px; flex-shrink: 0;
+}
+.status-time { font-family: 'JioType', sans-serif; font-size: 14px; font-weight: 400; color: var(--text-low); line-height: 1.3; }
+.status-icons { display: flex; align-items: center; gap: 4px; }
+
+/* App header */
+.app-header {
+  height: 56px; background: var(--white);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; gap: 8px; flex-shrink: 0;
+}
+.app-header-start { display: flex; align-items: center; gap: 4px; flex: 1; min-width: 0; }
+.app-header-end { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.hdr-icon-btn {
+  width: 36px; height: 36px; border-radius: 999px;
+  background: transparent; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s; flex-shrink: 0;
+}
+.hdr-icon-btn:hover { background: var(--surface-ghost); }
+.app-title { font-family: 'JioType', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.2; color: var(--text-high); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Screen content */
+.screen-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; background: var(--white); }
+.screen-content::-webkit-scrollbar { display: none; }
+.screen { display: none; height: 100%; }
+.screen.active { display: block; }
+
+/* Theme header (matches Astrology) */
+.theme-hero-block { display: flex; flex-direction: column; align-items: center; }
+.theme-hero-banner { width: 100%; height: 137px; position: relative; overflow: hidden; flex-shrink: 0; }
+.lhb-bg {
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='137'%3E%3Cdefs%3E%3CradialGradient id='bg' cx='50%25' cy='120%25' r='110%25'%3E%3Cstop offset='0%25' stop-color='%236a22c8'/%3E%3Cstop offset='40%25' stop-color='%232a0870'/%3E%3Cstop offset='100%25' stop-color='%23040010'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='360' height='137' fill='url(%23bg)'/%3E%3Ccircle cx='180' cy='160' r='110' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'/%3E%3Ccircle cx='180' cy='160' r='145' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3Ccircle cx='30' cy='18' r='1.2' fill='white' opacity='0.7'/%3E%3Ccircle cx='68' cy='8' r='0.8' fill='white' opacity='0.5'/%3E%3Ccircle cx='110' cy='24' r='1' fill='white' opacity='0.6'/%3E%3Ccircle cx='155' cy='12' r='1.4' fill='white' opacity='0.8'/%3E%3Ccircle cx='200' cy='6' r='0.9' fill='white' opacity='0.5'/%3E%3Ccircle cx='248' cy='20' r='1.1' fill='white' opacity='0.65'/%3E%3Ccircle cx='290' cy='10' r='0.8' fill='white' opacity='0.55'/%3E%3Ccircle cx='330' cy='28' r='1.3' fill='white' opacity='0.7'/%3E%3Ccircle cx='52' cy='45' r='0.7' fill='white' opacity='0.4'/%3E%3Ccircle cx='318' cy='55' r='0.9' fill='white' opacity='0.45'/%3E%3Ccircle cx='88' cy='62' r='0.6' fill='white' opacity='0.38'/%3E%3Ccircle cx='272' cy='38' r='0.8' fill='white' opacity='0.4'/%3E%3C/svg%3E") center center / cover no-repeat;
+}
+.lhb-gradient { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.38) 100%); }
+.theme-avatar-section { display: flex; flex-direction: column; align-items: center; margin-top: -56px; position: relative; z-index: 2; }
+.theme-avatar-ring { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--primary-20); overflow: hidden; background: var(--white); }
+.theme-title { font-family: 'JioType', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-high); text-align: center; margin-top: 8px; padding-bottom: 4px; }
+
+/* Section */
+.section { padding: var(--gap-block) var(--pad-screen) 0; }
+.section-title { font-family: 'JioType', sans-serif; font-size: 16px; font-weight: 700; line-height: 1.1; color: var(--text-high); margin-bottom: var(--gap-card); }
+.section-sub { font-family: 'JioType', sans-serif; font-size: 13px; font-weight: 400; color: var(--text-low); margin-top: -6px; margin-bottom: var(--gap-card); }
+
+/* Service Cards */
+.service-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: var(--gap-card);
+}
+.service-card {
+  background: var(--white);
+  border-radius: 16px;
+  border: 1px solid var(--stroke-subtle);
+  padding: var(--pad-card);
+  display: flex; flex-direction: column; gap: 8px;
+  cursor: pointer; transition: box-shadow 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 120px;
+  animation: fadeDown 0.3s ease both;
+}
+.service-card:active { background: var(--grey-20); }
+.service-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.service-card-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.service-card-body { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.service-card-title { font-family: 'JioType', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-high); line-height: 1.2; }
+.service-card-sub { font-family: 'JioType', sans-serif; font-size: 12px; font-weight: 400; color: var(--text-low); line-height: 1.3; }
+.service-card-arrow { align-self: flex-end; color: var(--text-low); margin-top: auto; }
+
+
+/* Home quick-ask chips */
+.chips-row { display: flex; flex-wrap: wrap; row-gap: 10px; column-gap: 8px; padding: 8px 0; }
+.chip {
+  flex-shrink: 0; height: 32px; padding: 8px 12px;
+  border-radius: 999px; border: 1px solid rgba(49,0,100,0.12);
+  background: rgba(255,255,255,0.01); font-family: 'JioType', sans-serif;
+  font-size: 14px; font-weight: 500; line-height: 1; letter-spacing: 0;
+  color: var(--surface-bold); cursor: pointer; white-space: nowrap;
+  display: flex; align-items: center; box-sizing: border-box;
+}
+.chip:hover { background: var(--primary-20); border-color: var(--primary-50); color: var(--primary-50); }
+
+/* Ask screen */
+.ask-screen { display: flex; flex-direction: column; height: 100%; background: var(--white); }
+.ask-messages { flex: 1; min-height: 0; padding: var(--gap-block) var(--pad-screen) var(--space-lg); display: flex; flex-direction: column; gap: var(--gap-card); overflow-y: auto; scrollbar-width: none; }
+.ask-messages::-webkit-scrollbar { display: none; }
+.msg-bot-row { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
+.msg-bot-response { flex-direction: column; gap: 6px; }
+.msg-bot { flex: 1; }
+.msg-bot p { font-family: 'JioType', sans-serif; font-size: 16px; font-weight: 400; color: var(--text-high); line-height: 1.3; margin: 0; }
+.msg-user-row { display: flex; justify-content: flex-end; padding: 8px 0; }
+.msg-user { background: var(--grey-20); border-radius: 24px 24px 0 24px; padding: 12px 16px; max-width: 240px; }
+.msg-user p { font-family: 'JioType', sans-serif; font-size: 16px; font-weight: 400; color: var(--text-high); line-height: 1.3; margin: 0; }
+
+/* Scheme result card */
+.scheme-card {
+  background: var(--white); border-radius: 14px;
+  border: 1px solid var(--stroke-subtle);
+  overflow: hidden; margin-bottom: 8px;
+}
+.scheme-card-hd {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: var(--pad-card);
+}
+.scheme-card-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--surface-ghost-icon);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.scheme-card-name { font-family: 'JioType', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-high); line-height: 1.2; }
+.scheme-card-benefit { font-family: 'JioType', sans-serif; font-size: 13px; font-weight: 400; color: var(--text-low); margin-top: 2px; }
+.scheme-card-divider { height: 1px; background: var(--stroke-subtle); margin: 0 var(--pad-card); }
+.scheme-card-footer { padding: 8px var(--pad-card) var(--pad-card); }
+.scheme-apply-btn { height: 40px; width: 100%; background: var(--surface-bold); color: var(--text-on-bold); border: none; border-radius: 999px; font-family: 'JioType', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; }
+
+/* Form step card */
+.form-step {
+  background: var(--grey-20); border-radius: 14px;
+  padding: var(--pad-card);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.form-step-hd { display: flex; align-items: center; gap: 8px; }
+.form-step-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--surface-bold); color: var(--text-on-bold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JioType', sans-serif; font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+.form-step-title { font-family: 'JioType', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-high); }
+.form-field { display: flex; flex-direction: column; gap: 4px; }
+.form-field-label { font-family: 'JioType', sans-serif; font-size: 12px; font-weight: 700; color: var(--text-low); text-transform: uppercase; letter-spacing: 0.04em; }
+.form-field-hint { font-family: 'JioType', sans-serif; font-size: 14px; font-weight: 400; color: var(--text-high); line-height: 1.4; }
+.form-field-example { font-family: 'JioType', sans-serif; font-size: 12px; font-weight: 400; color: var(--text-low); line-height: 1.3; }
+.form-next-btn { height: 44px; background: var(--surface-bold); color: var(--text-on-bold); border: none; border-radius: 999px; font-family: 'JioType', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; margin-top: 4px; }
+
+/* Status timeline */
+.timeline { display: flex; flex-direction: column; gap: 0; padding: 4px 0; }
+.timeline-item { display: flex; gap: 12px; position: relative; }
+.timeline-item:not(:last-child) .timeline-line {
+  position: absolute; left: 11px; top: 24px; bottom: -4px;
+  width: 2px;
+}
+.timeline-dot {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 4px;
+  position: relative; z-index: 1;
+}
+.timeline-dot.done { background: var(--success); }
+.timeline-dot.active { background: var(--surface-bold); }
+.timeline-dot.pending { background: var(--grey-40); }
+.timeline-body { flex: 1; padding-bottom: 20px; }
+.timeline-title { font-family: 'JioType', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-high); line-height: 1.2; }
+.timeline-date { font-family: 'JioType', sans-serif; font-size: 12px; font-weight: 400; color: var(--text-low); margin-top: 2px; }
+.timeline-note { font-family: 'JioType', sans-serif; font-size: 13px; font-weight: 400; color: var(--text-high); background: rgba(57,0,173,0.06); border-radius: 8px; padding: 6px 10px; margin-top: 6px; line-height: 1.4; }
+.tl-connector { position: absolute; left: 11px; top: 28px; bottom: -16px; width: 2px; background: var(--grey-40); }
+.tl-connector.done { background: var(--success); }
+
+/* Pred body (prose) */
+.pred-body { font-family: 'JioType', sans-serif; font-size: 16px; font-weight: 400; color: var(--text-high); line-height: 1.3; padding: 4px 0; }
+
+/* Sticky footer */
+.sticky-footer { flex-shrink: 0; background: var(--white); padding: 10px 12px; border-top: 1px solid var(--stroke-subtle); }
+.chat-input-container { background: var(--surface-ghost); border-radius: 24px; padding: 8px; display: flex; flex-direction: column; gap: 2px; cursor: text; }
+.chat-input-text { padding: 2px 8px 4px; position: relative; min-height: 28px; }
+.chat-input-placeholder { font-family: 'JioType', sans-serif; font-size: 16px; color: var(--text-low); line-height: 1.3; pointer-events: none; position: absolute; top: 2px; left: 8px; right: 8px; }
+.chat-input-real { width: 100%; background: transparent; border: none; outline: none; font-family: 'JioType', sans-serif; font-size: 16px; color: var(--text-high); line-height: 1.3; min-height: 24px; resize: none; }
+.chat-input-actions { display: flex; align-items: center; justify-content: space-between; padding: 0 4px 2px; }
+.chat-action-start { display: flex; align-items: center; gap: 2px; }
+.chat-action-end   { display: flex; align-items: center; gap: 6px; }
+.action-icon-btn { width: 32px; height: 32px; border-radius: 999px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.action-icon-btn:hover { background: var(--surface-ghost-icon); }
+.send-btn { display: flex; align-items: center; justify-content: center; background: var(--surface-bold); border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; transition: opacity 0.15s; flex-shrink: 0; }
+.send-btn:hover { opacity: 0.8; }
+
+/* Annotations */
+.annotations { width: 280px; flex-shrink: 0; padding-top: 48px; }
+.anno-card { background: var(--white); border-radius: 16px; border: 1px solid var(--stroke-subtle); padding: 18px; margin-bottom: 16px; animation: fadeDown 0.3s ease both; }
+.anno-title { font-family: 'JioType', sans-serif; font-size: 13px; font-weight: 700; color: var(--primary-50); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+.anno-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--stroke-subtle); }
+.anno-row:last-child { border-bottom: none; }
+.anno-key { font-family: 'JioType', sans-serif; font-size: 11px; font-weight: 700; color: var(--text-disabled); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0; }
+.anno-val { font-family: 'JioType', sans-serif; font-size: 13px; color: var(--text-high); line-height: 1.5; flex: 1; text-align: right; }
+
+
+/* Document verification progress bar */
+.doc-progress-row { display: flex; gap: 10px; align-items: center; padding: 6px 0 2px; }
+.doc-progress-track { flex: 1; height: 3px; background: var(--surface-ghost); border-radius: 999px; overflow: hidden; }
+.doc-progress-fill { height: 100%; width: 0%; background: var(--sparkle-50); border-radius: 999px; transition: width 3.4s cubic-bezier(0.4,0,0.2,1); }
+
+/* Animations */
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes msgSlideIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-dot">
+      <span style="background:var(--primary-50)"></span>
+      <span style="background:var(--secondary-50)"></span>
+      <span style="background:var(--sparkle-50)"></span>
+      <span style="background:var(--primary-50)"></span>
+    </div>
+    <div>
+      <div class="sidebar-app-name">Sarkar Saathi</div>
+      <div class="sidebar-app-sub">JBIQ</div>
+    </div>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-label">Menu</div>
+  <div class="nav-item active" onclick="switchNav(0,this)" id="nav0">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    Home
+  </div>
+  <div class="nav-item" onclick="switchNav(1,this,'scheme')" id="nav1">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 17H9a1 1 0 000 2h11a1 1 0 000-2zm0-6H9a1 1 0 000 2h11a1 1 0 000-2zM9 7h11a1 1 0 100-2H9a1 1 0 000 2zM4.5 4.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm0 6a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm0 6a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/></svg>
+    Scheme Finder
+  </div>
+  <div class="nav-item" onclick="switchNav(1,this,'doc')" id="nav2">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 6V2H7.5A2.5 2.5 0 005 4.5v15A2.5 2.5 0 007.5 22h10a2.5 2.5 0 002.5-2.5V9h-4a3 3 0 01-3-3zm3 1h4a2 2 0 00-.59-1.41l-3-3A2 2 0 0015 2v4a1 1 0 001 1z"/></svg>
+    Document Check
+  </div>
+  <div class="nav-item" onclick="switchNav(1,this,'form')" id="nav3">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 3c-1.1 0-2 .9-2 2-1.45 0-2.66 1.03-2.94 2.39C4.66 7.14 5.31 7 6 7c.96 0 1.85.27 2.61.74.52.32.6 1.04.17 1.47l-.08.08c-.32.32-.8.34-1.19.11a2.969 2.969 0 00-3.11.06c-.21.13-.4.29-.57.47h-.01a3.359 3.359 0 00-.47.69c-.08.15-.15.32-.2.49l-.06.18c-.06.23-.09.46-.09.71 0 1.07.56 2 1.4 2.53-.25.44-.4.93-.4 1.47 0 1.66 1.34 3 3 3 0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2zm10.6 6.47c.25-.44.4-.93.4-1.47 0-1.66-1.34-3-3-3 0-1.1-.9-2-2-2s-2 .9-2 2v8.5c0 1.1.9 2 2 2 .38 0 .74-.11 1.05-.3.39-.24.9-.19 1.22.14a1 1 0 01-.17 1.55 3.906 3.906 0 01-4.11.05V19c0 1.1.9 2 2 2s2-.9 2-2c1.66 0 3-1.34 3-3 0-.15-.02-.29-.04-.44-.01-.09-.03-.17-.05-.25 0-.04-.02-.08-.03-.12-.07-.23-.16-.45-.28-.66a2.969 2.969 0 00-1.81-1.42c-.46-.13-.8-.5-.8-.98 0-.65.62-1.14 1.25-.97 1.05.27 1.96.88 2.62 1.69.08-.27.13-.55.13-.85 0-1.07-.56-2-1.4-2.53h.02z"/></svg>
+    Form Co-Pilot
+  </div>
+  <div class="nav-item" onclick="switchNav(1,this,'tracker')" id="nav4">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 8V6a3 3 0 00-3-3h-1.28A2 2 0 0014 2h-4a2 2 0 00-1.72 1H7a3 3 0 00-3 3v13a3 3 0 003 3h10a3 3 0 003-3v-1a2 2 0 002-2v-6a2 2 0 00-2-2zm-2 11a1 1 0 01-1 1H7a1 1 0 01-1-1V6a1 1 0 011-1h1.28A2 2 0 0010 6h4a2 2 0 001.72-1H17a1 1 0 011 1v2h-6a2 2 0 00-2 2v6a2 2 0 002 2h6v1zm.71-6.79l-3 3a1.002 1.002 0 01-1.42 0l-1-1a1.004 1.004 0 111.42-1.42l.29.3 2.29-2.3a1.004 1.004 0 111.42 1.42z"/></svg>
+    Track Application
+  </div>
+  <div class="sidebar-footer">
+    Sarkar Saathi
+    <span>JDS v3.6.4</span>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="phone-wrap">
+    <div class="phone-label">Government Services</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <div class="status-time" id="statusTime">9:41</div>
+        <div class="status-icons">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="1" fill="#141414" opacity="0.38"/><rect x="4.5" y="2" width="3" height="10" rx="1" fill="#141414" opacity="0.38"/><rect x="9" y="0.5" width="3" height="11.5" rx="1" fill="#141414"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" fill="#141414"/></svg>
+          <svg width="15" height="12" viewBox="0 0 15 12" fill="none"><path d="M7.5 2.5C9.6 2.5 11.5 3.4 12.85 4.85L14.2 3.5C12.5 1.85 10.12 0.83 7.5 0.83S2.5 1.85.8 3.5L2.15 4.85C3.5 3.4 5.4 2.5 7.5 2.5z" fill="#141414" opacity="0.38"/><path d="M7.5 5.17c1.38 0 2.63.55 3.54 1.45L12.3 5.3A6.64 6.64 0 007.5 3.5a6.64 6.64 0 00-4.8 1.8l1.26 1.32A4.65 4.65 0 017.5 5.17z" fill="#141414"/><circle cx="7.5" cy="9.5" r="1.5" fill="#141414"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="#141414" opacity="0.38"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#141414"/><path d="M23 4v4a2 2 0 000-4z" fill="#141414" opacity="0.38"/></svg>
+        </div>
+      </div>
+
+      <!-- App header -->
+      <div class="app-header">
+        <div class="app-header-start">
+          <button class="hdr-icon-btn" id="hdrBackBtn" onclick="handleBack()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 20a1.003 1.003 0 01-.71-.29l-7-7a1 1 0 010-1.42l7-7a1.005 1.005 0 011.42 1.42L9.41 12l6.3 6.29a.997.997 0 01.219 1.095.999.999 0 01-.93.615z" fill="var(--icon-medium)"/></svg>
+          </button>
+          <span class="app-title" id="appTitle">Sarkar Saathi</span>
+        </div>
+        <div class="app-header-end">
+          <button class="hdr-icon-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="var(--icon-medium)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="var(--icon-medium)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable screens -->
+      <div class="screen-content" id="screenContent">
+
+        <!-- SCREEN 0: HOME -->
+        <div class="screen active" id="s0">
+          <!-- Theme header (matches Astrology) -->
+          <div class="theme-hero-block">
+            <div class="theme-hero-banner">
+              <div class="lhb-bg"></div>
+              <div class="lhb-gradient"></div>
+            </div>
+            <div class="theme-avatar-section">
+              <div class="theme-avatar-ring">
+                <!-- Indian Tiranga flag SVG -->
+                <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+                  <rect width="120" height="40" fill="#FF9933"/>
+                  <rect y="40" width="120" height="40" fill="#FFFFFF"/>
+                  <rect y="80" width="120" height="40" fill="#138808"/>
+                  <!-- Ashoka Chakra rim -->
+                  <circle cx="60" cy="60" r="13" fill="none" stroke="#000080" stroke-width="1.5"/>
+                  <!-- Center dot -->
+                  <circle cx="60" cy="60" r="2" fill="#000080"/>
+                  <!-- 24 spokes (every 15°) -->
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(0,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(15,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(30,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(45,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(60,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(75,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(90,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(105,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(120,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(135,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(150,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(165,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(180,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(195,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(210,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(225,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(240,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(255,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(270,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(285,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(300,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(315,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(330,60,60)"/>
+                  <line x1="60" y1="60" x2="60" y2="47" stroke="#000080" stroke-width="0.9" transform="rotate(345,60,60)"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="theme-title">Sarkar Saathi</div>
+          <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);text-align:center;margin-top:2px;padding-bottom:4px">Government AI Co-Pilot · JioBharatIQ</div>
+
+          <!-- Services -->
+          <div class="section" style="padding-top:20px">
+            <div class="section-title">What can I help you with?</div>
+            <div class="service-grid">
+              <div class="service-card" onclick="startFlow('scheme')" style="animation-delay:0s">
+                <div class="service-card-icon" style="background:var(--surface-ghost-icon)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 17H9a1 1 0 000 2h11a1 1 0 000-2zm0-6H9a1 1 0 000 2h11a1 1 0 000-2zM9 7h11a1 1 0 100-2H9a1 1 0 000 2zM4.5 4.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm0 6a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm0 6a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" fill="var(--surface-bold)"/></svg>
+                </div>
+                <div class="service-card-body">
+                  <div class="service-card-title">Find My Schemes</div>
+                  <div class="service-card-sub">Discover all schemes you're eligible for</div>
+                </div>
+                <svg class="service-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="var(--text-low)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+
+              <div class="service-card" onclick="startFlow('doc')" style="animation-delay:0.05s">
+                <div class="service-card-icon" style="background:var(--sparkle-20)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M13 6V2H7.5A2.5 2.5 0 005 4.5v15A2.5 2.5 0 007.5 22h10a2.5 2.5 0 002.5-2.5V9h-4a3 3 0 01-3-3zm3 1h4a2 2 0 00-.59-1.41l-3-3A2 2 0 0015 2v4a1 1 0 001 1z" fill="var(--sparkle-50)"/></svg>
+                </div>
+                <div class="service-card-body">
+                  <div class="service-card-title">Document Check</div>
+                  <div class="service-card-sub">See exactly what papers you need</div>
+                </div>
+                <svg class="service-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="var(--text-low)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+
+              <div class="service-card" onclick="startFlow('form')" style="animation-delay:0.1s">
+                <div class="service-card-icon" style="background:var(--secondary-20)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 3c-1.1 0-2 .9-2 2-1.45 0-2.66 1.03-2.94 2.39C4.66 7.14 5.31 7 6 7c.96 0 1.85.27 2.61.74.52.32.6 1.04.17 1.47l-.08.08c-.32.32-.8.34-1.19.11a2.969 2.969 0 00-3.11.06c-.21.13-.4.29-.57.47h-.01a3.359 3.359 0 00-.47.69c-.08.15-.15.32-.2.49l-.06.18c-.06.23-.09.46-.09.71 0 1.07.56 2 1.4 2.53-.25.44-.4.93-.4 1.47 0 1.66 1.34 3 3 3 0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2zm10.6 6.47c.25-.44.4-.93.4-1.47 0-1.66-1.34-3-3-3 0-1.1-.9-2-2-2s-2 .9-2 2v8.5c0 1.1.9 2 2 2 .38 0 .74-.11 1.05-.3.39-.24.9-.19 1.22.14a1 1 0 01-.17 1.55 3.906 3.906 0 01-4.11.05V19c0 1.1.9 2 2 2s2-.9 2-2c1.66 0 3-1.34 3-3 0-.15-.02-.29-.04-.44-.01-.09-.03-.17-.05-.25 0-.04-.02-.08-.03-.12-.07-.23-.16-.45-.28-.66a2.969 2.969 0 00-1.81-1.42c-.46-.13-.8-.5-.8-.98 0-.65.62-1.14 1.25-.97 1.05.27 1.96.88 2.62 1.69.08-.27.13-.55.13-.85 0-1.07-.56-2-1.4-2.53h.02z" fill="var(--secondary-50)"/></svg>
+                </div>
+                <div class="service-card-body">
+                  <div class="service-card-title">Form Co-Pilot</div>
+                  <div class="service-card-sub">Step-by-step form filling in plain language</div>
+                </div>
+                <svg class="service-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="var(--text-low)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+
+              <div class="service-card" onclick="startFlow('tracker')" style="animation-delay:0.15s">
+                <div class="service-card-icon" style="background:var(--grey-20)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 8V6a3 3 0 00-3-3h-1.28A2 2 0 0014 2h-4a2 2 0 00-1.72 1H7a3 3 0 00-3 3v13a3 3 0 003 3h10a3 3 0 003-3v-1a2 2 0 002-2v-6a2 2 0 00-2-2zm-2 11a1 1 0 01-1 1H7a1 1 0 01-1-1V6a1 1 0 011-1h1.28A2 2 0 0010 6h4a2 2 0 001.72-1H17a1 1 0 011 1v2h-6a2 2 0 00-2 2v6a2 2 0 002 2h6v1zm.71-6.79l-3 3a1.002 1.002 0 01-1.42 0l-1-1a1.004 1.004 0 111.42-1.42l.29.3 2.29-2.3a1.004 1.004 0 111.42 1.42z" fill="var(--grey-60)"/></svg>
+                </div>
+                <div class="service-card-body">
+                  <div class="service-card-title">Track Application</div>
+                  <div class="service-card-sub">Real-time status of your submissions</div>
+                </div>
+                <svg class="service-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="var(--text-low)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick ask -->
+          <div class="section" style="padding-top:20px;padding-bottom:24px">
+            <div class="section-title">Ask something</div>
+            <div class="chips-row">
+              <button class="chip" onclick="startFlowWithQ('scheme','Am I eligible for PM Kisan?')">Am I eligible for PM Kisan?</button>
+              <button class="chip" onclick="startFlowWithQ('doc','Documents for Ayushman Bharat')">Documents for Ayushman Bharat</button>
+              <button class="chip" onclick="startFlowWithQ('form','Govt Service (Aadhaar, PAN…)')">Help fill Aadhaar / PAN form</button>
+              <button class="chip" onclick="startFlowWithQ('tracker','Check my application status')">Check my application status</button>
+            </div>
+          </div>
+        </div><!-- /s0 -->
+
+        <!-- SCREEN 1: CHAT -->
+        <div class="screen" id="s1">
+          <div class="ask-screen">
+            <div class="ask-messages" id="chatMessages"></div>
+          </div>
+        </div><!-- /s1 -->
+
+      </div><!-- /screen-content -->
+
+      <!-- Sticky footer (always visible) -->
+      <div class="sticky-footer" id="chatFooter">
+        <div class="chat-input-container" onclick="focusChatInput()">
+          <div class="chat-input-text">
+            <div class="chat-input-placeholder" id="chatPlaceholder">Ask me anything about govt. services…</div>
+            <textarea id="chatInput" class="chat-input-real" rows="1" oninput="handleInputGrow(this)" onkeydown="handleEnter(event)"></textarea>
+          </div>
+          <div class="chat-input-actions">
+            <div class="chat-action-start">
+              <button class="action-icon-btn" onclick="handleChatPlus()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="var(--icon-medium)" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="chat-action-end">
+              <button class="send-btn" onclick="sendMessage()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="color:var(--text-on-bold)"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /phone -->
+  </div><!-- /phone-wrap -->
+
+  <!-- Annotations panel -->
+  <div class="annotations">
+    <div class="anno-card">
+      <div class="anno-title">Home Screen</div>
+      <div class="anno-row"><span class="anno-key">Canvas</span><span class="anno-val">360 × 800px</span></div>
+      <div class="anno-row"><span class="anno-key">Font</span><span class="anno-val">JioType</span></div>
+      <div class="anno-row"><span class="anno-key">Design</span><span class="anno-val">JDS v3.6.4</span></div>
+      <div class="anno-row"><span class="anno-key">Primary</span><span class="anno-val">#3900ad (surface-bold)</span></div>
+    </div>
+    <div class="anno-card">
+      <div class="anno-title">MCP Servers</div>
+      <div class="anno-row"><span class="anno-key">claude.ai Figma</span><span class="anno-val" style="color:var(--text-low)">Auth n/a · not used</span></div>
+      <div class="anno-row" style="margin-top:6px"><span class="anno-key">JioBharatIQ</span><span class="anno-val">JDS v3.6.4</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Tools used</span><span class="anno-val" style="text-align:right">get_assets<br>find_icon<br>lookup_component<br>resolve_token<br>validate_prototype</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Figma refs</span><span class="anno-val" style="text-align:right">Card 8448:19350<br>Button 6046:8659</span></div>
+    </div>
+    <div class="anno-card">
+      <div class="anno-title">Design System Audit</div>
+      <div class="anno-row"><span class="anno-key">Font</span><span class="anno-val">JioType (400, 500, 700)</span></div>
+      <div class="anno-row"><span class="anno-key">Design system</span><span class="anno-val">JDS v3.6.4</span></div>
+      <div class="anno-row"><span class="anno-key">Figma nodes</span><span class="anno-val">2 (Card, Button)</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">validate_prototype</span><span class="anno-val" style="text-align:right">151 errors<br><span style="color:var(--text-low);font-size:11px">57 color · 74 spacing · 20 emoji</span></span></div>
+      <div class="anno-row" style="margin-top:6px"><span class="anno-key" style="font-weight:700">JDS match</span><span class="anno-val" style="font-weight:700;color:var(--warning)">72%</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Compliant</span><span class="anno-val" style="text-align:right">JioType · Colors<br>Spacing tokens · Icons<br>JBIQ Thinking state<br>Buttons · Chips</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px;color:var(--error)">Gaps</span><span class="anno-val" style="text-align:right;color:var(--error)">Service cards (custom)<br>Timeline (custom)<br>Doc checklist (custom)<br>Form step (custom)</span></div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+/* Bot Avatar: 4 touching dots (JioBharatIQ brand mark) */
+const BOT_AVATAR = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:var(--primary-50)"><circle cx="6" cy="6" r="6" fill="currentColor"/><circle cx="18" cy="6" r="6" fill="currentColor"/><circle cx="6" cy="18" r="6" fill="currentColor"/><circle cx="18" cy="18" r="6" fill="currentColor"/></svg>`;
+
+const THINKING_HTML = `<video width="32" height="32" autoplay loop muted playsinline style="border-radius:50%;flex-shrink:0;display:block"><source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Thinking_state.mp4" type="video/mp4"></video><span style="font-family:'JioType',sans-serif;font-size:14px;font-weight:500;color:var(--text-low);line-height:1.5;align-self:center">Analysing…</span>`;
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function scrollToBottom(el) { el.scrollTop = el.scrollHeight; }
+
+function scrollToReveal(container, el) {
+  requestAnimationFrame(() => {
+    const cRect = container.getBoundingClientRect();
+    const eRect = el.getBoundingClientRect();
+    container.scrollTop += eRect.top - cRect.top - 8;
+  });
+}
+
+/* Shared icon constants */
+const CHK_ICON = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="10" cy="10" r="10" fill="#25ab21"/><path d="M6 10.4l2.8 2.6 5.2-5.4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const WRN_ICON = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="10" cy="10" r="10" style="fill:var(--warning)"/><path d="M10 6v5M10 13.5v1" stroke="var(--white)" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+
+/* Reusable list row renderers */
+function bulletRow(icon, text) {
+  return `<div style="display:flex;align-items:flex-start;gap:8px">${icon}<span style="font-family:'JioType',sans-serif;font-size:16px;font-weight:400;color:var(--text-high);line-height:1.3">${text}</span></div>`;
+}
+function numberedRow(n, item, note) {
+  return `<div style="display:flex;align-items:flex-start;gap:8px">
+    <div style="width:20px;height:20px;border-radius:999px;background:#25ab21;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:'JioType',sans-serif;font-size:11px;font-weight:500">${n}</div>
+    <div style="flex:1">
+      <div style="font-family:'JioType',sans-serif;font-size:16px;font-weight:400;color:var(--text-high);line-height:1.3">${item}</div>
+      ${note ? `<div style="font-family:'JioType',sans-serif;font-size:12px;font-weight:400;color:var(--text-high);opacity:0.65;line-height:1.3;margin-top:4px">${note}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+/* State */
+let activeFlow = null; // 'scheme' | 'doc' | 'form' | 'tracker'
+let flowStep = 0;
+let afterMismatchCorrection = false;
+let docFlowScheme = null;
+let currentNavIdx = 0;
+let formBranch = null; // 'scheme' | 'service'
+let awaitingRefNumber = false;
+let awaitingErrorDesc = false;
+let awaitingTrackerRef = false;
+let trackerService = null;
+let trackerRef = null;
+
+/* Nav switching */
+function switchNav(screenIdx, el, flow) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s' + screenIdx).classList.add('active');
+
+  const footer = document.getElementById('chatFooter');
+
+  footer.style.display = 'block';
+  if (screenIdx === 0) {
+    document.getElementById('appTitle').textContent = 'Sarkar Saathi';
+    document.getElementById('chatPlaceholder').textContent = 'Ask me anything about govt. services\u2026';
+  } else {
+    document.getElementById('chatPlaceholder').textContent = '';
+    if (flow) {
+      initFlow(flow);
+    }
+  }
+  currentNavIdx = screenIdx;
+}
+
+function handleBack() {
+  switchNav(0, document.getElementById('nav0'));
+}
+
+function startFlow(flow) {
+  switchNav(1, document.getElementById('nav0'), flow);
+  // deselect nav0 visual — keep back button
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('chatFooter').style.display = 'block';
+  document.getElementById('hdrBackBtn').style.display = 'flex';
+}
+
+function startFlowWithQ(flow, question) {
+  startFlow(flow);
+  setTimeout(() => {
+    const msgs = document.getElementById('chatMessages');
+    const uRow = document.createElement('div');
+    uRow.className = 'msg-user-row';
+    uRow.style.animation = 'msgSlideIn 0.22s ease';
+    uRow.innerHTML = `<div class="msg-user"><p>${escapeHtml(question)}</p></div>`;
+    msgs.appendChild(uRow);
+    scrollToReveal(msgs, uRow);
+    if (flow === 'scheme') handleSchemeChip(question, msgs);
+    else if (flow === 'doc') handleDocChip(question, msgs);
+    else if (flow === 'form') handleFormChip(question, msgs);
+  }, 400);
+}
+
+/* Init flows */
+function initFlow(flow) {
+  activeFlow = flow;
+  flowStep = 0;
+  formBranch = null;
+  awaitingRefNumber = false;
+  awaitingErrorDesc = false;
+  awaitingTrackerRef = false;
+  trackerService = null;
+  trackerRef = null;
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML = '';
+
+  const titles = {
+    scheme: 'Find My Schemes',
+    doc:    'Document Check',
+    form:   'Form Co-Pilot',
+    tracker:'Track Application'
+  };
+  document.getElementById('appTitle').textContent = titles[flow];
+
+  const greetings = {
+    scheme: {
+      text: `I'll match you to every government scheme you're eligible for. To get started — what is your <strong style="font-weight:700;color:var(--text-high)">state</strong>?`,
+      chips: ['Rajasthan', 'Maharashtra', 'Uttar Pradesh', 'Bihar', 'Gujarat', 'Madhya Pradesh']
+    },
+    doc: {
+      text: `Tell me which scheme you're applying for and I'll give you a complete document checklist — including what you likely already have and what's missing.`,
+      chips: ['PM Kisan Samman Nidhi', 'Ayushman Bharat PMJAY', 'PM Awas Yojana', 'Ujjwala Yojana 2.0']
+    },
+    form: {
+      text: `I can guide you through any government form, step by step, in plain language. What do you need help with?`,
+      chips: ['Apply for a Scheme', 'Govt Service (Aadhaar, PAN…)']
+    },
+    tracker: {
+      text: `Which application would you like to track? Select a service or scheme:`,
+      chips: ['Aadhaar Card', 'PAN Card', 'Passport', 'PM Kisan Samman Nidhi', 'Ayushman Bharat PMJAY', 'More\u2026']
+    }
+  };
+
+  const g = greetings[flow];
+  setTimeout(() => {
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    let chipsHtml = g.chips.length
+      ? `<div class="chips-row" style="margin:0">${g.chips.map(c => `<button class="chip" onclick="handleChip('${escapeHtml(c)}')">${escapeHtml(c)}</button>`).join('')}</div>`
+      : '';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot"><p>${g.text}</p>${chipsHtml ? `<div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>${chipsHtml}` : ''}</div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 200);
+}
+
+/* User taps chip from home quick-ask */
+function appendUserChipMsg(text) {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>${escapeHtml(text)}</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+}
+
+/* Handle chip click */
+function handleChip(text) {
+  // Disable clicked chip
+  event.target.disabled = true;
+  event.target.style.opacity = '0.38';
+  event.target.style.pointerEvents = 'none';
+
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>${escapeHtml(text)}</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+
+  if (activeFlow === 'scheme') handleSchemeChip(text, msgs);
+  else if (activeFlow === 'doc') handleDocChip(text, msgs);
+  else if (activeFlow === 'form') handleFormChip(text, msgs);
+  else if (activeFlow === 'tracker') handleTrackerChip(text, msgs);
+}
+
+/* Thinking helper */
+function appendThinking(msgs) {
+  const t = document.createElement('div');
+  t.className = 'msg-bot-row';
+  t.style.padding = '6px 0';
+  t.innerHTML = THINKING_HTML;
+  msgs.appendChild(t);
+  return t;
+}
+
+/* SCHEME FINDER FLOW */
+function handleSchemeChip(text, msgs) {
+  if (flowStep === 0) {
+    // State selected → ask occupation
+    flowStep = 1;
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      const chips = ['Farmer / Kisan', 'Daily Wage Worker', 'Small Business Owner', 'Student', 'Homemaker', 'Other'];
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p>Got it — <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(text)}</strong>. What is your primary occupation?</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <div class="chips-row" style="margin:0">${chips.map(c=>`<button class="chip" onclick="handleChip('${escapeHtml(c)}')">${escapeHtml(c)}</button>`).join('')}</div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1200);
+
+  } else if (flowStep === 1) {
+    // Occupation selected → ask annual income
+    flowStep = 2;
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      const chips = ['Below ₹1 lakh', '₹1–2 lakh', '₹2–5 lakh', '₹5–8 lakh', 'Above ₹8 lakh'];
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p>What is your <strong style="font-weight:700;color:var(--text-high)">annual household income</strong>?</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <div class="chips-row" style="margin:0">${chips.map(c=>`<button class="chip" onclick="handleChip('${escapeHtml(c)}')">${escapeHtml(c)}</button>`).join('')}</div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1100);
+
+  } else if (flowStep === 2) {
+    // Annual income selected → ask family members
+    flowStep = 3;
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      const chips = ['1–2 members', '3–4 members', '5–6 members', '7 or more'];
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p>How many members are in your <strong style="font-weight:700;color:var(--text-high)">family</strong>?</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <div class="chips-row" style="margin:0">${chips.map(c=>`<button class="chip" onclick="handleChip('${escapeHtml(c)}')">${escapeHtml(c)}</button>`).join('')}</div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1000);
+
+  } else if (flowStep === 3) {
+    // Family members → ask house ownership
+    flowStep = 4;
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      const chips = ['Yes, I own a house', 'No, I rent', 'Living with family'];
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p>Last one — do you <strong style="font-weight:700;color:var(--text-high)">own a house</strong>?</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <div class="chips-row" style="margin:0">${chips.map(c=>`<button class="chip" onclick="handleChip('${escapeHtml(c)}')">${escapeHtml(c)}</button>`).join('')}</div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1000);
+
+  } else if (flowStep === 4) {
+    // House ownership → show eligible schemes
+    flowStep = 5;
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p style="margin-bottom:12px">Based on your profile, I found <strong style="font-weight:700;color:var(--text-high)">9 schemes</strong> you're eligible for. Here are the top 3:</p>
+        ${schemeResultsHtml()}
+      </div>`;
+      msgs.appendChild(botRow);
+      requestAnimationFrame(() => scrollToBottom(msgs));
+    }, 1800);
+  }
+}
+
+function schemeResultsHtml() {
+  const schemes = [
+    { name: 'PM Kisan Samman Nidhi', benefit: '₹6,000/year direct to bank account', tag: 'Direct Benefit Transfer', iconVar: '--primary-50' },
+    { name: 'PM Fasal Bima Yojana', benefit: 'Crop insurance coverage up to ₹2 lakh', tag: 'Agricultural Insurance', iconVar: '--sparkle-50' },
+    { name: 'PM Awas Yojana (Rural)', benefit: 'Subsidy up to ₹1.2 lakh for home construction', tag: 'Housing Benefit', iconVar: '--secondary-50' },
+  ];
+  return schemes.map(s => `
+    <div class="scheme-card">
+      <div class="scheme-card-hd">
+        <div class="scheme-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="color:var(${s.iconVar})"><path d="M20 8V6a3 3 0 00-3-3h-1.28A2 2 0 0014 2h-4a2 2 0 00-1.72 1H7a3 3 0 00-3 3v13a3 3 0 003 3h10a3 3 0 003-3v-1a2 2 0 002-2v-6a2 2 0 00-2-2zm-2 11a1 1 0 01-1 1H7a1 1 0 01-1-1V6a1 1 0 011-1h1.28A2 2 0 0010 6h4a2 2 0 001.72-1H17a1 1 0 011 1v2h-6a2 2 0 00-2 2v6a2 2 0 002 2h6v1zm.71-6.79l-3 3a1.002 1.002 0 01-1.42 0l-1-1a1.004 1.004 0 111.42-1.42l.29.3 2.29-2.3a1.004 1.004 0 111.42 1.42z" fill="currentColor"/></svg>
+        </div>
+        <div>
+          <div class="scheme-card-name">${s.name}</div>
+          <div class="scheme-card-benefit">${s.benefit}</div>
+        </div>
+      </div>
+      <div class="scheme-card-divider"></div>
+      <div class="scheme-card-footer">
+        <button class="scheme-apply-btn" onclick="showSchemeDocuments('${escapeHtml(s.name)}')">Apply Now</button>
+      </div>
+    </div>`).join('');
+}
+
+const SCHEME_DOCS = {
+  'PM Kisan Samman Nidhi': [
+    { item: 'Aadhaar Card', note: 'Linked to bank account and land records' },
+    { item: 'Land Ownership / Khasra-Khatauni', note: 'Issued by Patwari or Revenue Department' },
+    { item: 'Bank Passbook (first page)', note: 'Account must be in your name' },
+    { item: 'Mobile number', note: 'Registered with Aadhaar for OTP verification' },
+    { item: 'Passport-size photograph', note: '2 recent photos, white background' },
+  ],
+  'PM Fasal Bima Yojana': [
+    { item: 'Aadhaar Card', note: 'Mandatory for identity verification' },
+    { item: 'Bank Passbook (first page)', note: 'For premium deduction and claim credit' },
+    { item: 'Land Records / Khasra', note: 'To establish crop area and ownership' },
+    { item: 'Sowing Certificate', note: 'Issued by Village Patwari or Gram Panchayat' },
+    { item: 'Crop details declaration', note: 'Name of crop, area sown, expected yield' },
+  ],
+  'PM Awas Yojana (Rural)': [
+    { item: 'Aadhaar Card', note: 'All adult family members' },
+    { item: 'BPL / SECC-2011 registration', note: 'Confirms socio-economic eligibility' },
+    { item: 'Bank Passbook (first page)', note: 'Subsidy directly credited to your account' },
+    { item: 'Income Certificate', note: 'Annual household income below ₹3 lakh' },
+    { item: 'No-house ownership declaration', note: 'Self-declaration or certificate from Gram Pradhan' },
+    { item: 'Passport-size photograph', note: '2 recent photos of applicant' },
+  ],
+};
+
+function schemeDocListHtml(docs) {
+  return `<div style="display:flex;flex-direction:column;gap:8px;padding:4px 0">${docs.map((d, i) => numberedRow(i + 1, escapeHtml(d.item), escapeHtml(d.note))).join('')}</div>`;
+}
+
+function showSchemeDocuments(schemeName) {
+  const msgs = document.getElementById('chatMessages');
+
+  // User message
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Apply for ${escapeHtml(schemeName)}</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const docs = SCHEME_DOCS[schemeName] || SCHEME_DOCS['PM Kisan Samman Nidhi'];
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">To apply for <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(schemeName)}</strong>, you will need the following documents:</p>
+      ${schemeDocListHtml(docs)}
+    </div>`;
+    msgs.appendChild(botRow);
+    requestAnimationFrame(() => scrollToBottom(msgs));
+
+    // Follow-up upload prompt after a short pause
+    const t2 = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t2);
+      const plusIcon = `<span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:999px;background:var(--surface-ghost);vertical-align:middle;margin:0 2px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><line x1="12" y1="5" x2="12" y2="19" stroke="var(--icon-medium)" stroke-width="2.5" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke="var(--icon-medium)" stroke-width="2.5" stroke-linecap="round"/></svg></span>`;
+      const uploadRow = document.createElement('div');
+      uploadRow.className = 'msg-bot-row msg-bot-response';
+      uploadRow.style.animation = 'msgSlideIn 0.22s ease';
+      uploadRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p style="margin-bottom:8px">Please take <strong style="font-weight:700;color:var(--text-high)">clear, well-lit photos</strong> of each document and upload them. Make sure all text is readable and corners are fully visible.</p>
+        <p style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.3;margin:0">Tap the ${plusIcon} icon in the chat bar below to attach your files.</p>
+      </div>`;
+      msgs.appendChild(uploadRow);
+      requestAnimationFrame(() => scrollToBottom(msgs));
+    }, 1200);
+  }, 1400);
+}
+
+function simulateDocUpload() {
+  const msgs = document.getElementById('chatMessages');
+
+  // Step 1: spinner avatar + "Verifying documents…" + progress bar
+  const progressRow = document.createElement('div');
+  progressRow.className = 'msg-bot-row';
+  progressRow.style.cssText = 'padding:6px 0;flex-direction:column;gap:6px;align-items:flex-start';
+  progressRow.innerHTML = `
+    <div style="display:flex;gap:10px;align-items:center">
+      <video width="32" height="32" autoplay loop muted playsinline style="border-radius:50%;flex-shrink:0;display:block"><source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Thinking_state.mp4" type="video/mp4"></video>
+      <span style="font-family:'JioType',sans-serif;font-size:14px;font-weight:500;color:var(--text-low);line-height:1.5">Verifying documents…</span>
+    </div>
+    <div class="doc-progress-row" style="width:100%;padding-left:42px;box-sizing:border-box">
+      <div class="doc-progress-track"><div class="doc-progress-fill" id="docProgressFill"></div></div>
+    </div>`;
+  msgs.appendChild(progressRow);
+  scrollToBottom(msgs);
+
+  // Kick off the progress bar fill
+  setTimeout(() => {
+    const fill = document.getElementById('docProgressFill');
+    if (fill) fill.style.width = '100%';
+  }, 60);
+
+  // Step 2: after bar completes, remove and show results
+  setTimeout(() => {
+    progressRow.remove();
+
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">I have scanned your documents. <strong style="font-weight:700">1 issue found</strong> that needs your attention before submission:</p>
+
+      <div style="display:flex;flex-direction:column;gap:8px;padding:4px 0;margin-bottom:12px">
+        ${bulletRow(CHK_ICON, 'Aadhaar Card')}
+        ${bulletRow(WRN_ICON, 'Land Ownership / Khasra')}
+        ${bulletRow(CHK_ICON, 'Bank Passbook')}
+        ${bulletRow(CHK_ICON, 'Passport Photograph')}
+      </div>
+
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 12px"></div>
+
+      <div style="background:rgba(240,109,15,0.06);border:1px solid rgba(240,109,15,0.22);border-radius:12px;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" style="fill:var(--warning)"/><path d="M10 6v5M10 13.5v1" stroke="var(--white)" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span style="font-family:'JioType',sans-serif;font-size:13px;font-weight:700;color:var(--warning);text-transform:uppercase;letter-spacing:0.04em">Name mismatch</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-family:'JioType',sans-serif;font-size:12px;font-weight:700;color:var(--text-low);text-transform:uppercase;letter-spacing:0.04em">Aadhaar Card</span>
+            <span style="font-family:'JioType',sans-serif;font-size:15px;font-weight:700;color:var(--text-high)">Ramesh Kumar</span>
+          </div>
+          <div style="height:1px;background:rgba(240,109,15,0.18)"></div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-family:'JioType',sans-serif;font-size:12px;font-weight:700;color:var(--text-low);text-transform:uppercase;letter-spacing:0.04em">Land Ownership Record</span>
+            <span style="font-family:'JioType',sans-serif;font-size:15px;font-weight:700;color:var(--warning)">R. Kumar Singh</span>
+          </div>
+        </div>
+        <p style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4;margin:10px 0 0">Please upload a corrected land record or a name-match affidavit from a notary to continue.</p>
+      </div>
+
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+      <p style="font-family:'JioType',sans-serif;font-size:15px;font-weight:400;color:var(--text-high);line-height:1.4;margin:0 0 12px">Would you like help correcting this name mismatch?</p>
+      <div style="display:flex;gap:8px">
+        <button onclick="handleMismatchLater(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--surface-ghost-icon);color:var(--primary-50);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Later</button>
+        <button onclick="handleMismatchYes(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--primary-50);color:var(--text-on-bold);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Yes</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    requestAnimationFrame(() => scrollToBottom(msgs));
+  }, 3700);
+}
+
+function handleMismatchLater(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => b.disabled = true);
+  btn.style.opacity = '0.38';
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Later</p></div>`;
+  msgs.appendChild(uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot"><p>No problem. You can come back anytime and I will help you fix it. Your application progress is saved.</p></div>`;
+    msgs.appendChild(botRow);
+    scrollToBottom(msgs);
+  }, 900);
+}
+
+function handleMismatchYes(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => b.disabled = true);
+  btn.style.opacity = '0.38';
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Yes</p></div>`;
+  msgs.appendChild(uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+
+
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:8px">You have <strong>two options</strong> to fix this name mismatch. Choose the one that works for you.</p>
+
+      <div style="background:var(--surface-ghost);border-radius:12px;padding:12px 14px;margin-bottom:10px">
+        <p style="font-family:'JioType',sans-serif;font-size:13px;font-weight:700;color:var(--text-high);margin:0 0 10px">Option 1 &mdash; Correct your Aadhaar name</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${bulletRow(CHK_ICON, 'Go to <strong>myAadhaar.uidai.gov.in</strong> on your phone or computer')}
+          ${bulletRow(CHK_ICON, 'Click <strong>Update Aadhaar</strong> and log in with your mobile OTP')}
+          ${bulletRow(CHK_ICON, 'Select <strong>Name</strong> and enter the exact spelling from your Land Record: <em>R. Kumar Singh</em>')}
+          ${bulletRow(CHK_ICON, 'Upload a supporting document (Land Record or Voter ID) as proof')}
+          ${bulletRow(CHK_ICON, 'Pay Rs. 50 online. Update usually reflects within 5&ndash;7 working days')}
+        </div>
+      </div>
+
+      <div style="background:var(--surface-ghost);border-radius:12px;padding:12px 14px;margin-bottom:12px">
+        <p style="font-family:'JioType',sans-serif;font-size:13px;font-weight:700;color:var(--text-high);margin:0 0 10px">Option 2 &mdash; Get a Name-Match Affidavit (faster)</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${bulletRow(CHK_ICON, 'Visit your nearest <strong>Gram Pradhan</strong> (village head) or Notary Public<br><span style="font-size:13px;color:var(--text-low)">Gram Panchayat Office, Village Rampur, Near Govt. Primary School, Lucknow &mdash; 226001 &nbsp;&bull;&nbsp; 2.3 km away</span>')}
+          ${bulletRow(CHK_ICON, 'Ask for a <strong>Name-Match Affidavit</strong> stating that <em>Ramesh Kumar</em> (Aadhaar) and <em>R. Kumar Singh</em> (Land Record) are the same person')}
+          ${bulletRow(CHK_ICON, 'Get it stamped and signed. Cost is typically Rs. 50&ndash;100')}
+          ${bulletRow(CHK_ICON, 'Upload the affidavit here along with your other documents to continue your PM Kisan application')}
+        </div>
+      </div>
+
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 10px"></div>
+      <p style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4;margin:0">Option 2 is quicker if you need to apply soon. Once corrected, come back here and tap <strong>+</strong> to re-upload your documents.</p>
+    </div>`;
+    msgs.appendChild(botRow);
+    afterMismatchCorrection = true;
+    requestAnimationFrame(() => scrollToBottom(msgs));
+  }, 1200);
+}
+
+function switchToDocForScheme(schemeName) {
+  activeFlow = 'doc';
+  docFlowScheme = schemeName;
+  flowStep = 1; // skip scheme selection, go straight to state
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Apply for ${escapeHtml(schemeName)}</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    const stateChips = ['Rajasthan', 'Maharashtra', 'Uttar Pradesh', 'Bihar', 'Gujarat', 'Madhya Pradesh'];
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p>Sure! Which <strong style="font-weight:700;color:var(--text-high)">state</strong> are you applying from?</p>
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+      <div class="chips-row" style="margin:0">${stateChips.map(s => `<button class="chip" onclick="handleChip('${escapeHtml(s)}')">${escapeHtml(s)}</button>`).join('')}</div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 800);
+}
+
+/* DOCUMENT DIAGNOSTIC FLOW */
+function handleDocChip(text, msgs) {
+  if (flowStep === 0) {
+    // Scheme selected → ask state
+    docFlowScheme = text;
+    flowStep = 1;
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      const stateChips = ['Rajasthan', 'Maharashtra', 'Uttar Pradesh', 'Bihar', 'Gujarat', 'Madhya Pradesh'];
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p>Got it — <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(text)}</strong>. Which <strong style="font-weight:700;color:var(--text-high)">state</strong> are you applying from?</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <div class="chips-row" style="margin:0">${stateChips.map(s => `<button class="chip" onclick="handleChip('${escapeHtml(s)}')">${escapeHtml(s)}</button>`).join('')}</div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1000);
+
+  } else if (flowStep === 1) {
+    // State selected → show checklist
+    flowStep = 2;
+    const scheme = docFlowScheme || text;
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p style="margin-bottom:12px">For <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(scheme)}</strong> in <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(text)}</strong>, here's what you'll need:</p>
+        ${schemeDocListHtml(SCHEME_DOCS[scheme] || SCHEME_DOCS['PM Kisan Samman Nidhi'])}
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <p style="font-size:15px;font-weight:400;color:var(--text-high);line-height:1.4;margin:0 0 12px">Do you want me to verify these documents?</p>
+        <div style="display:flex;gap:8px">
+          <button onclick="handleDocVerifyLater(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--surface-ghost-icon);color:var(--primary-50);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Later</button>
+          <button onclick="handleDocVerifyYes(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--primary-50);color:var(--text-on-bold);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Yes</button>
+        </div>
+      </div>`;
+      msgs.appendChild(botRow);
+      requestAnimationFrame(() => scrollToBottom(msgs));
+    }, 1500);
+  }
+}
+
+function handleDocVerifyLater(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => b.disabled = true);
+  btn.style.opacity = '0.38';
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Later</p></div>`;
+  msgs.appendChild(uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot"><p>No problem. Come back whenever you're ready and I'll check them for you.</p></div>`;
+    msgs.appendChild(botRow);
+    scrollToBottom(msgs);
+  }, 900);
+}
+
+function handleDocVerifyYes(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => b.disabled = true);
+  btn.style.opacity = '0.38';
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Yes</p></div>`;
+  msgs.appendChild(uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Take clear photos of each document and tap the <strong>+</strong> button below to upload them. I'll check them instantly.</p>
+    </div>`;
+    msgs.appendChild(botRow);
+    afterMismatchCorrection = false;
+    scrollToBottom(msgs);
+  }, 900);
+}
+
+function docChecklistHtml(scheme) {
+  const common = [
+    { name: 'Aadhaar Card', have: true },
+    { name: 'Bank Passbook / Account Details', have: true },
+    { name: 'Passport-size Photograph', have: true },
+    { name: 'Income Certificate', have: false },
+    { name: 'Land Records / Khasra', have: false },
+  ];
+  const extra = scheme.toLowerCase().includes('ayushman') ? [{ name: 'Ration Card', have: false }] : [];
+  const rows = [...common, ...extra].map(d => bulletRow(d.have ? CHK_ICON : WRN_ICON, d.name)).join('');
+  return `<div style="display:flex;flex-direction:column;gap:8px;padding:4px 0">${rows}</div>`;
+}
+
+function handleHowToGet(docName) {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>How to get ${escapeHtml(docName)}</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">To get an <strong style="font-weight:700;color:var(--text-high)">Income Certificate</strong>, visit your local Tehsildar or apply online via your state's e-district portal:</p>
+      <div style="display:flex;flex-direction:column;gap:8px;padding:4px 0">
+        ${numberedRow(1, "Visit your state's <strong style='font-weight:700'>e-district portal</strong> or nearest Tehsildar office", null)}
+        ${numberedRow(2, 'Carry Aadhaar Card + Ration Card + recent utility bill', null)}
+        ${numberedRow(3, 'Certificate is issued within <strong style="font-weight:700">7&ndash;15 working days</strong>', null)}
+      </div>
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+      <div class="chips-row" style="margin:0">
+        <button class="chip" onclick="startFlow('form')">Help me fill the application now</button>
+        <button class="chip" onclick="startFlow('tracker')">Track my existing application</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 1200);
+}
+
+/* FORM CO-PILOT DATA */
+const FORM_SCHEMES = [
+  { name: 'PM Kisan Samman Nidhi', desc: 'Farmer income support · ₹6,000/yr', url: 'pmkisan.gov.in', href: 'https://pmkisan.gov.in/RegistrationFormNew.aspx', bg: 'var(--surface-ghost-icon)', color: 'var(--primary-50)' },
+  { name: 'Ayushman Bharat PMJAY', desc: 'Health cover up to ₹5 lakh', url: 'pmjay.gov.in', href: 'https://pmjay.gov.in', bg: 'var(--sparkle-20)', color: 'var(--sparkle-50)' },
+  { name: 'PM Awas Yojana', desc: 'Affordable housing subsidy', url: 'pmaymis.gov.in', href: 'https://pmaymis.gov.in', bg: 'var(--secondary-20)', color: 'var(--secondary-50)' },
+  { name: 'MGNREGS', desc: '100 days guaranteed employment', url: 'nrega.nic.in', href: 'https://nrega.nic.in', bg: 'var(--grey-20)', color: 'var(--grey-60)' },
+];
+const FORM_SCHEMES_MORE = [
+  { name: 'Ujjwala Yojana 2.0', desc: 'Free LPG connection', url: 'pmuy.gov.in', href: 'https://www.pmuy.gov.in', bg: 'var(--secondary-20)', color: 'var(--secondary-50)' },
+  { name: 'Sukanya Samriddhi', desc: 'Savings for girl child', url: 'nsiindia.gov.in', href: 'https://www.nsiindia.gov.in', bg: 'var(--surface-ghost-icon)', color: 'var(--primary-50)' },
+  { name: 'NSP Scholarships', desc: 'Scholarships for students', url: 'scholarships.gov.in', href: 'https://scholarships.gov.in', bg: 'var(--sparkle-20)', color: 'var(--sparkle-50)' },
+];
+const FORM_SERVICES = [
+  { name: 'Aadhaar Card', desc: 'New enrolment or update', url: 'uidai.gov.in', href: 'https://myaadhaar.uidai.gov.in', bg: 'var(--surface-ghost-icon)', color: 'var(--primary-50)' },
+  { name: 'PAN Card', desc: 'Apply new or correction', url: 'incometax.gov.in', href: 'https://eportal.incometax.gov.in', bg: 'var(--secondary-20)', color: 'var(--secondary-50)' },
+  { name: 'Passport', desc: 'Apply or renew passport', url: 'passportindia.gov.in', href: 'https://passportindia.gov.in', bg: 'var(--sparkle-20)', color: 'var(--sparkle-50)' },
+  { name: 'Voter ID', desc: 'Register or update voter card', url: 'voterportal.eci.gov.in', href: 'https://voterportal.eci.gov.in', bg: 'var(--grey-20)', color: 'var(--grey-60)' },
+];
+const FORM_SERVICES_MORE = [
+  { name: 'Driving Licence', desc: 'Apply or renew licence', url: 'sarathi.parivahan.gov.in', href: 'https://sarathi.parivahan.gov.in', bg: 'var(--secondary-20)', color: 'var(--secondary-50)' },
+  { name: 'Ration Card', desc: 'New application or update', url: 'State e-district portal', href: '#', bg: 'var(--surface-ghost-icon)', color: 'var(--primary-50)' },
+  { name: 'Birth Certificate', desc: 'Apply via municipality', url: 'crsorgi.gov.in', href: 'https://crsorgi.gov.in', bg: 'var(--sparkle-20)', color: 'var(--sparkle-50)' },
+];
+
+/* ic_document and ic_list svg paths from JDS */
+const IC_DOCUMENT = `M13 6V2H7.5A2.5 2.5 0 005 4.5v15A2.5 2.5 0 007.5 22h10a2.5 2.5 0 002.5-2.5V9h-4a3 3 0 01-3-3zm3 1h4a2 2 0 00-.59-1.41l-3-3A2 2 0 0015 2v4a1 1 0 001 1z`;
+const IC_LIST = `M20 17H9a1 1 0 000 2h11a1 1 0 000-2zm0-6H9a1 1 0 000 2h11a1 1 0 000-2zM9 7h11a1 1 0 100-2H9a1 1 0 000 2zM4.5 4.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm0 6a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm0 6a1.5 1.5 0 100 3 1.5 1.5 0 000-3z`;
+
+function formListItemHtml(item, isScheme) {
+  const iconPath = isScheme ? IC_LIST : IC_DOCUMENT;
+  const safeName = item.name.replace(/'/g, '&apos;');
+  return `<div style="border:1px solid var(--stroke-subtle);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="handleFormServiceSelect('${safeName}')">
+    <div style="width:36px;height:36px;border-radius:10px;background:${item.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="${item.color}"><path d="${iconPath}"/></svg>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="font-family:'JioType',sans-serif;font-size:14px;font-weight:700;color:var(--text-high);line-height:1.2">${item.name}</div>
+      <div style="font-family:'JioType',sans-serif;font-size:12px;font-weight:400;color:var(--text-low);margin-top:1px;line-height:1.3">${item.desc}</div>
+    </div>
+    <a href="${item.href}" target="_blank" onclick="event.stopPropagation()" style="flex-shrink:0;height:28px;padding:0 10px;border-radius:999px;border:1px solid var(--stroke-subtle);background:var(--white);font-family:'JioType',sans-serif;font-size:11px;font-weight:500;color:var(--primary-50);display:flex;align-items:center;text-decoration:none;white-space:nowrap">${item.url}</a>
+  </div>`;
+}
+
+function formSchemeListHtml(expanded) {
+  const items = expanded ? FORM_SCHEMES_MORE : FORM_SCHEMES;
+  const moreChip = !expanded ? `<div style="height:0.5px;background:var(--stroke-subtle);margin:4px 0 8px"></div><div class="chips-row" style="margin:0"><button class="chip" onclick="handleChip('More schemes')">More schemes</button></div>` : '';
+  return `<div style="display:flex;flex-direction:column;gap:8px">${items.map(i => formListItemHtml(i, true)).join('')}${moreChip}</div>`;
+}
+
+function formServiceListHtml(expanded) {
+  const items = expanded ? FORM_SERVICES_MORE : FORM_SERVICES;
+  const moreChip = !expanded ? `<div style="height:0.5px;background:var(--stroke-subtle);margin:4px 0 8px"></div><div class="chips-row" style="margin:0"><button class="chip" onclick="handleChip('More')">More</button></div>` : '';
+  return `<div style="display:flex;flex-direction:column;gap:8px">${items.map(i => formListItemHtml(i, false)).join('')}${moreChip}</div>`;
+}
+
+function handleFormServiceSelect(name) {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>${escapeHtml(name)}</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  flowStep = 2;
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Let's fill the <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(name)}</strong> form together. I'll guide you one step at a time.</p>
+      ${formStep1Html()}
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 1200);
+}
+
+/* FORM CO-PILOT FLOW */
+function handleFormChip(text, msgs) {
+  if (flowStep === 0) {
+    flowStep = 1;
+    formBranch = text.toLowerCase().includes('scheme') ? 'scheme' : 'service';
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      if (formBranch === 'scheme') {
+        botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+          <p style="margin-bottom:12px">Select the scheme you want to apply for:</p>
+          ${formSchemeListHtml(false)}
+        </div>`;
+      } else {
+        botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+          <p style="margin-bottom:12px">Select the government service you need help with:</p>
+          ${formServiceListHtml(false)}
+        </div>`;
+      }
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1000);
+    return;
+  }
+
+  if (flowStep === 1 && (text === 'More schemes' || text === 'More')) {
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      const label = text === 'More schemes' ? 'More schemes you can apply for:' : 'More government services:';
+      const html = text === 'More schemes' ? formSchemeListHtml(true) : formServiceListHtml(true);
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot"><p style="margin-bottom:12px">${label}</p>${html}</div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 700);
+    return;
+  }
+
+  // Specific form selected via chip text (fallback)
+  handleFormServiceSelect(text);
+}
+
+function formStep1Html() {
+  return `
+    <div class="form-step">
+      <div class="form-step-hd">
+        <div class="form-step-num">1</div>
+        <div class="form-step-title">Personal Information</div>
+      </div>
+      <div class="form-field">
+        <div class="form-field-label">Full Name</div>
+        <div class="form-field-hint">Write your name exactly as it appears on your Aadhaar card.</div>
+        <div class="form-field-example">Example: RAMESH KUMAR VERMA (all caps)</div>
+      </div>
+      <div class="form-field">
+        <div class="form-field-label">Father's / Husband's Name</div>
+        <div class="form-field-hint">This is the name of your father (unmarried) or husband (married).</div>
+      </div>
+      <div class="form-field">
+        <div class="form-field-label">Date of Birth</div>
+        <div class="form-field-hint">Use DD/MM/YYYY format as written on your birth certificate or Aadhaar.</div>
+        <div class="form-field-example">Example: 15/08/1985</div>
+      </div>
+      <button class="form-next-btn" onclick="showFormStep2()">Next: Address Details →</button>
+    </div>`;
+}
+
+function showFormStep2() {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Done with Step 1</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Step 1 done! Now let's fill your address.</p>
+      <div class="form-step">
+        <div class="form-step-hd">
+          <div class="form-step-num">2</div>
+          <div class="form-step-title">Address Details</div>
+        </div>
+        <div class="form-field">
+          <div class="form-field-label">Village / Town</div>
+          <div class="form-field-hint">Write the name of your village or town where you currently live.</div>
+        </div>
+        <div class="form-field">
+          <div class="form-field-label">Post Office &amp; District</div>
+          <div class="form-field-hint">Check your Aadhaar or ration card — the district is printed there.</div>
+        </div>
+        <div class="form-field">
+          <div class="form-field-label">PIN Code</div>
+          <div class="form-field-hint">A 6-digit number that identifies your postal area.</div>
+          <div class="form-field-example">Example: 302001 (Jaipur)</div>
+        </div>
+        <button class="form-next-btn" onclick="showFormStep3()">Next: Bank Details →</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 800);
+}
+
+function showFormStep3() {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Done with Step 2</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Almost there! Last section — bank details for direct benefit transfer.</p>
+      <div class="form-step">
+        <div class="form-step-hd">
+          <div class="form-step-num">3</div>
+          <div class="form-step-title">Bank Account Details</div>
+        </div>
+        <div class="form-field">
+          <div class="form-field-label">Account Number</div>
+          <div class="form-field-hint">Your savings account number — found on your passbook or cheque book.</div>
+        </div>
+        <div class="form-field">
+          <div class="form-field-label">IFSC Code</div>
+          <div class="form-field-hint">An 11-character code identifying your bank branch. It's on your passbook or cheque.</div>
+          <div class="form-field-example">Example: SBIN0001234</div>
+        </div>
+        <button class="form-next-btn" onclick="showFormComplete()">Submit Application →</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 800);
+}
+
+function showFormComplete() {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Submit Application</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Were you able to submit the application successfully on the website?</p>
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 10px"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="handleFormSubmitNo(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--surface-ghost-icon);color:var(--primary-50);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">No, got an error</button>
+        <button onclick="handleFormSubmitYes(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--primary-50);color:var(--text-on-bold);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Yes, submitted!</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 1200);
+}
+
+function handleFormSubmitYes(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => { b.disabled = true; b.style.opacity = '0.38'; });
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Yes, submitted!</p></div>`;
+  msgs.appendChild(uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    awaitingRefNumber = true;
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    const plusIcon = `<span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:999px;background:var(--surface-ghost);vertical-align:middle;margin:0 2px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><line x1="12" y1="5" x2="12" y2="19" stroke="var(--icon-medium)" stroke-width="2.5" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke="var(--icon-medium)" stroke-width="2.5" stroke-linecap="round"/></svg></span>`;
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:8px">That's great news! Please share your <strong style="font-weight:700;color:var(--text-high)">reference number</strong> from the confirmation page — type it in the chat bar below.</p>
+      <p style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4;margin:0">Or tap ${plusIcon} to upload a screenshot of the success screen and I'll read the number for you.</p>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 900);
+}
+
+function handleFormSubmitNo(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => { b.disabled = true; b.style.opacity = '0.38'; });
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>No, got an error</p></div>`;
+  msgs.appendChild(uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    awaitingErrorDesc = true;
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    const plusIcon = `<span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:999px;background:var(--surface-ghost);vertical-align:middle;margin:0 2px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><line x1="12" y1="5" x2="12" y2="19" stroke="var(--icon-medium)" stroke-width="2.5" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke="var(--icon-medium)" stroke-width="2.5" stroke-linecap="round"/></svg></span>`;
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:8px">No problem — let's fix it. Please <strong style="font-weight:700;color:var(--text-high)">describe the error message</strong> you saw on the website.</p>
+      <p style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4;margin:0">Or tap ${plusIcon} to upload a screenshot of the error screen — I'll identify the issue and tell you exactly what to do.</p>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 900);
+}
+
+function showRefNumberConfirmed(ref, msgs) {
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <div style="background:rgba(37,171,33,0.06);border:1px solid rgba(37,171,33,0.16);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <div style="font-family:'JioType',sans-serif;font-size:15px;font-weight:700;color:var(--text-high);margin-bottom:4px">Reference number saved!</div>
+          <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4">Ref: <strong style="font-weight:700;color:var(--text-high);font-family:'JioType',sans-serif">${escapeHtml(ref)}</strong></div>
+          <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4;margin-top:2px">You can use this number anytime to check your application status.</div>
+        </div>
+      </div>
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 10px"></div>
+      <div class="chips-row" style="margin:0">
+        <button class="chip" onclick="startTrackerWithRef('${escapeHtml(ref)}')">Track this application</button>
+        <button class="chip" onclick="startFlow('scheme')">Find more schemes</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 800);
+}
+
+function showErrorGuidance(errorText, msgs) {
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    const lower = errorText.toLowerCase();
+    let advice;
+    if (lower.includes('aadhaar') || lower.includes('otp') || lower.includes('mobile')) {
+      advice = `<p style="margin-bottom:10px">This looks like an <strong style="font-weight:700;color:var(--text-high)">Aadhaar / OTP verification issue</strong>. Here's how to fix it:</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${bulletRow(CHK_ICON, 'Make sure your mobile number is linked to Aadhaar — check at <strong>myaadhaar.uidai.gov.in</strong>')}
+          ${bulletRow(CHK_ICON, 'OTPs expire in 10 minutes — request a fresh one and submit immediately')}
+          ${bulletRow(CHK_ICON, 'If your number is not linked, visit the nearest Aadhaar Seva Kendra to update it')}
+        </div>`;
+    } else if (lower.includes('server') || lower.includes('down') || lower.includes('try again') || lower.includes('unavailable')) {
+      advice = `<p style="margin-bottom:10px">The <strong style="font-weight:700;color:var(--text-high)">government server appears to be temporarily down</strong>. This is common during peak hours.</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${bulletRow(CHK_ICON, 'Wait 30–60 minutes and try again — avoid peak hours (10am–12pm and 5pm–7pm)')}
+          ${bulletRow(CHK_ICON, 'Try a different browser (Chrome or Firefox work best for government portals)')}
+          ${bulletRow(CHK_ICON, 'Clear your browser cache or try in an Incognito window')}
+        </div>`;
+    } else if (lower.includes('document') || lower.includes('upload') || lower.includes('file') || lower.includes('format')) {
+      advice = `<p style="margin-bottom:10px">This is a <strong style="font-weight:700;color:var(--text-high)">document upload issue</strong>. Common causes:</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${bulletRow(CHK_ICON, 'File size must typically be under <strong>200KB–2MB</strong> — compress your photo if needed')}
+          ${bulletRow(CHK_ICON, 'Accepted formats are usually <strong>PDF, JPG, or PNG</strong> — check the portal instructions')}
+          ${bulletRow(CHK_ICON, 'Ensure the document image is clear, well-lit, and all four corners are visible')}
+        </div>`;
+    } else {
+      advice = `<p style="margin-bottom:10px">I've noted the error. Here are the most common fixes for government portal submissions:</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${bulletRow(CHK_ICON, 'Refresh the page and try again — session timeouts are common after 15 minutes')}
+          ${bulletRow(CHK_ICON, 'Check that all mandatory fields (marked with *) are filled in correctly')}
+          ${bulletRow(CHK_ICON, 'Use Chrome or Firefox — some portals do not work well on Safari or older browsers')}
+          ${bulletRow(CHK_ICON, 'If the error persists, visit your nearest <strong>Common Service Centre (CSC)</strong> — they can submit on your behalf')}
+        </div>`;
+    }
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">${advice}
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+      <div class="chips-row" style="margin:0">
+        <button class="chip" onclick="retryFormSubmit()">I've fixed it — try again</button>
+        <button class="chip" onclick="handleFindCSC()">Find nearest CSC</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 1400);
+}
+
+function retryFormSubmit() {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>I've fixed it — try again</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Go ahead and submit the form again on the website. Once it goes through, come back here and let me know!</p>
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 10px"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="handleFormSubmitNo(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--surface-ghost-icon);color:var(--primary-50);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">No, got an error</button>
+        <button onclick="handleFormSubmitYes(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--primary-50);color:var(--text-on-bold);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Yes, submitted!</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 700);
+}
+
+function handleFindCSC() {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Find nearest CSC</p></div>`;
+  msgs.appendChild(uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:10px">A <strong style="font-weight:700;color:var(--text-high)">Common Service Centre (CSC)</strong> can submit the form on your behalf for a small fee (usually ₹30–50).</p>
+      <div style="background:var(--surface-ghost);border-radius:12px;padding:12px 14px;margin-bottom:12px">
+        <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:700;color:var(--text-high);margin-bottom:4px">Nearest CSC</div>
+        <div style="font-family:'JioType',sans-serif;font-size:14px;font-weight:400;color:var(--text-high);line-height:1.4">Jan Seva Kendra, Near Govt Primary School<br>Village Rampur, Lucknow — 226001</div>
+        <div style="font-family:'JioType',sans-serif;font-size:12px;font-weight:400;color:var(--text-low);margin-top:4px">2.3 km away · Open Mon–Sat, 9am–5pm</div>
+      </div>
+      <p style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4;margin:0">Or find all CSCs at <strong style="color:var(--primary-50)">locator.csccloud.in</strong></p>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 1000);
+}
+
+function simulateRefScreenshotUpload() {
+  const msgs = document.getElementById('chatMessages');
+  const progressRow = document.createElement('div');
+  progressRow.className = 'msg-bot-row';
+  progressRow.style.cssText = 'padding:6px 0;flex-direction:column;gap:6px;align-items:flex-start';
+  progressRow.innerHTML = `
+    <div style="display:flex;gap:10px;align-items:center">
+      <video width="32" height="32" autoplay loop muted playsinline style="border-radius:50%;flex-shrink:0;display:block"><source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Thinking_state.mp4" type="video/mp4"></video>
+      <span style="font-family:'JioType',sans-serif;font-size:14px;font-weight:500;color:var(--text-low);line-height:1.5">Reading screenshot…</span>
+    </div>
+    <div class="doc-progress-row" style="width:100%;padding-left:42px;box-sizing:border-box">
+      <div class="doc-progress-track"><div class="doc-progress-fill" id="refProgressFill"></div></div>
+    </div>`;
+  msgs.appendChild(progressRow);
+  scrollToBottom(msgs);
+  setTimeout(() => { const f = document.getElementById('refProgressFill'); if (f) f.style.width = '100%'; }, 60);
+  setTimeout(() => {
+    progressRow.remove();
+    const extractedRef = 'REF-2025-UP-' + Math.floor(10000 + Math.random() * 90000);
+    const uRow = document.createElement('div');
+    uRow.className = 'msg-user-row';
+    uRow.style.animation = 'msgSlideIn 0.22s ease';
+    uRow.innerHTML = `<div class="msg-user"><p>[Screenshot uploaded]</p></div>`;
+    msgs.appendChild(uRow);
+    showRefNumberConfirmed(extractedRef, msgs);
+  }, 3200);
+}
+
+function simulateErrorScreenshotUpload() {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>[Error screenshot uploaded]</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  showErrorGuidance('server unavailable try again', msgs);
+}
+
+/* APPLICATION TRACKER FLOW */
+function handleTrackerChip(text, msgs) {
+  if (text === 'More\u2026') {
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      const more = ['PM Awas Yojana', 'Voter ID', 'Driving Licence', 'Ration Card', 'NSP Scholarship'];
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p style="margin-bottom:12px">More options:</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 10px"></div>
+        <div class="chips-row" style="margin:0">${more.map(c => `<button class="chip" onclick="handleChip('${c}')">${c}</button>`).join('')}</div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 700);
+    return;
+  }
+
+  trackerService = text;
+  flowStep = 1;
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    awaitingTrackerRef = true;
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:6px">Please type your <strong style="font-weight:700;color:var(--text-high)">reference number or tracking ID</strong> for ${escapeHtml(text)}.</p>
+      <p style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4;margin:0">You can find this on the confirmation SMS or email you received when you applied.</p>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 900);
+}
+
+function showTrackerConsentRequest(msgs) {
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">To find your latest application status, may I scan your <strong style="font-weight:700;color:var(--text-high)">messages and email</strong> for confirmation details?</p>
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 10px"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="handleTrackerConsentNo(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--surface-ghost-icon);color:var(--primary-50);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Later</button>
+        <button onclick="handleTrackerConsentYes(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--primary-50);color:var(--text-on-bold);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Yes</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 800);
+}
+
+function handleTrackerConsentYes(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => { b.disabled = true; b.style.opacity = '0.38'; });
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Yes</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+
+  // Progress bar scan
+  const progressRow = document.createElement('div');
+  progressRow.className = 'msg-bot-row';
+  progressRow.style.cssText = 'padding:6px 0;flex-direction:column;gap:6px;align-items:flex-start';
+  progressRow.innerHTML = `
+    <div style="display:flex;gap:10px;align-items:center">
+      <video width="32" height="32" autoplay loop muted playsinline style="border-radius:50%;flex-shrink:0;display:block"><source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Thinking_state.mp4" type="video/mp4"></video>
+      <span style="font-family:'JioType',sans-serif;font-size:14px;font-weight:500;color:var(--text-low);line-height:1.5">Scanning messages and email\u2026</span>
+    </div>
+    <div class="doc-progress-row" style="width:100%;padding-left:42px;box-sizing:border-box">
+      <div class="doc-progress-track"><div class="doc-progress-fill" id="trackerScanFill"></div></div>
+    </div>`;
+  msgs.appendChild(progressRow);
+  scrollToBottom(msgs);
+  setTimeout(() => { const f = document.getElementById('trackerScanFill'); if (f) f.style.width = '100%'; }, 60);
+
+  setTimeout(() => {
+    progressRow.remove();
+    showTrackerStatus(msgs);
+  }, 3600);
+}
+
+function handleTrackerConsentNo(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => { b.disabled = true; b.style.opacity = '0.38'; });
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Later</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p>Sure! I will help you with tracking later at your comfort.</p>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 600);
+}
+
+function showTrackerStatus(msgs) {
+  const botRow = document.createElement('div');
+  botRow.className = 'msg-bot-row msg-bot-response';
+  botRow.style.animation = 'msgSlideIn 0.22s ease';
+  const serviceName = trackerService || 'PM Kisan Samman Nidhi';
+  botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+    <p style="margin-bottom:12px">Found your application for <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(serviceName)}</strong>. Current status: <strong style="font-weight:700;color:var(--surface-bold);font-family:'JioType',sans-serif">Under Field Verification</strong></p>
+    ${trackerTimelineHtml()}
+    <div style="background:rgba(57,0,173,0.05);border-radius:12px;padding:12px;margin-top:8px">
+      <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:700;color:var(--surface-bold);margin-bottom:4px">Next step</div>
+      <div style="font-family:'JioType',sans-serif;font-size:14px;font-weight:400;color:var(--text-high);line-height:1.4">A field officer may visit your registered address to verify records. Estimated approval: <strong style="font-weight:700;font-family:'JioType',sans-serif">10\u201315 working days</strong>.</div>
+    </div>
+    <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+    <div class="chips-row" style="margin:0">
+      <button class="chip" onclick="handleSetReminder()">Remind me when approved</button>
+      <button class="chip" onclick="startFlow('doc')">Check my documents</button>
+    </div>
+  </div>`;
+  msgs.appendChild(botRow);
+  scrollToReveal(msgs, botRow);
+}
+
+function startTrackerWithRef(ref) {
+  activeFlow = 'tracker';
+  const msgs = document.getElementById('chatMessages');
+  document.getElementById('appTitle').textContent = 'Track Application';
+
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>${escapeHtml(ref)}</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  showTrackerResult(ref, msgs);
+}
+
+function showTrackerResult(ref, msgs) {
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    const svcName = trackerService || 'PM Kisan Samman Nidhi';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Found your application for <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(svcName)}</strong>. Current status: <strong style="font-weight:700;color:var(--surface-bold);font-family:'JioType',sans-serif">Under Field Verification</strong></p>
+      ${trackerTimelineHtml()}
+      <div style="background:rgba(57,0,173,0.05);border-radius:12px;padding:12px;margin-top:8px">
+        <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:700;color:var(--surface-bold);margin-bottom:4px">Next step</div>
+        <div style="font-family:'JioType',sans-serif;font-size:14px;font-weight:400;color:var(--text-high);line-height:1.4">A field officer may visit your registered address to verify land records. Estimated approval: <strong style="font-weight:700;font-family:'JioType',sans-serif">10–15 working days</strong>.</div>
+      </div>
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+      <div class="chips-row" style="margin:0">
+        <button class="chip" onclick="handleSetReminder()">Remind me when approved</button>
+        <button class="chip" onclick="startFlow('doc')">Check my documents again</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 1600);
+}
+
+function trackerTimelineHtml() {
+  const steps = [
+    { title: 'Application Submitted', date: '15 Jan 2025', state: 'done', note: null },
+    { title: 'Documents Verified', date: '18 Jan 2025', state: 'done', note: null },
+    { title: 'Field Verification', date: '21 Jan 2025 · In Progress', state: 'active', note: 'Officer assigned: Ramesh Singh (Block: Bassi)' },
+    { title: 'Approval by Tehsildar', date: 'Pending', state: 'pending', note: null },
+    { title: 'First Installment Released', date: 'Pending', state: 'pending', note: null },
+  ];
+  return `<div class="timeline">${steps.map((s, i) => `
+    <div class="timeline-item" style="position:relative">
+      ${i < steps.length - 1 ? `<div class="tl-connector ${s.state === 'done' ? 'done' : ''}"></div>` : ''}
+      <div class="timeline-dot ${s.state}">
+        ${s.state === 'done' ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="color:var(--white)"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>` :
+          s.state === 'active' ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--white)"></div>` :
+          `<div style="width:8px;height:8px;border-radius:50%;background:var(--grey-60)"></div>`}
+      </div>
+      <div class="timeline-body">
+        <div class="timeline-title" style="color:${s.state === 'pending' ? 'var(--text-low)' : 'var(--text-high)'}">${s.title}</div>
+        <div class="timeline-date">${s.date}</div>
+        ${s.note ? `<div class="timeline-note">${s.note}</div>` : ''}
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function handleSetReminder() {
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Remind me when approved</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">To send you updates, I will need access to your <strong style="font-weight:700;color:var(--text-high)">messages and mail account</strong>.</p>
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 10px"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="handleReminderPermLater(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--surface-ghost-icon);color:var(--primary-50);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Later</button>
+        <button onclick="handleReminderPermYes(this)" style="flex:1;height:44px;border-radius:999px;border:none;background:var(--primary-50);color:var(--text-on-bold);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;cursor:pointer">Yes</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 800);
+}
+
+function handleReminderPermYes(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => { b.disabled = true; b.style.opacity = '0.38'; });
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Yes</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p>Thank you! I will keep you informed about the progress on your application on a timely basis.</p>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 700);
+}
+
+function handleReminderPermLater(btn) {
+  btn.closest('.msg-bot').querySelectorAll('button').forEach(b => { b.disabled = true; b.style.opacity = '0.38'; });
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Later</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p>No problem. You can enable notifications anytime from your settings to stay updated on your application.</p>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 700);
+}
+
+/* Chat bar + button */
+function handleChatPlus() {
+  if (awaitingRefNumber) {
+    awaitingRefNumber = false;
+    simulateRefScreenshotUpload();
+  } else if (awaitingErrorDesc) {
+    awaitingErrorDesc = false;
+    simulateErrorScreenshotUpload();
+  } else if (afterMismatchCorrection) {
+    afterMismatchCorrection = false;
+    simulateDocReupload();
+  } else {
+    simulateDocUpload(null);
+  }
+}
+
+function simulateDocReupload() {
+  const msgs = document.getElementById('chatMessages');
+
+  // Step 1: spinner + progress bar
+  const progressRow = document.createElement('div');
+  progressRow.className = 'msg-bot-row';
+  progressRow.style.cssText = 'animation:msgSlideIn 0.22s ease;padding:6px 0';
+  progressRow.innerHTML = `${BOT_AVATAR}<div style="flex:1;display:flex;flex-direction:column;gap:8px;padding:8px 0">
+    <div style="display:flex;gap:10px;align-items:center">
+      <video width="32" height="32" autoplay loop muted playsinline style="border-radius:50%;flex-shrink:0">
+        <source src="https://static.jio.com/assets/jdslite/Thinking_state.mp4" type="video/mp4">
+      </video>
+      <span style="font-family:'JioType',sans-serif;font-size:15px;font-weight:400;color:var(--text-medium)">Verifying documents…</span>
+    </div>
+    <div class="doc-progress-row" style="width:100%;padding-left:42px;box-sizing:border-box">
+      <div class="doc-progress-track"><div class="doc-progress-fill" id="docProgressFill2"></div></div>
+    </div>
+  </div>`;
+  msgs.appendChild(progressRow);
+  scrollToBottom(msgs);
+  setTimeout(() => { const f = document.getElementById('docProgressFill2'); if (f) f.style.width = '100%'; }, 60);
+
+  // Step 2: results after 3700ms
+  setTimeout(() => {
+    progressRow.remove();
+
+
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">New document verified:</p>
+
+      <div style="display:flex;flex-direction:column;gap:8px;padding:4px 0 4px;margin-bottom:12px">
+        ${bulletRow(CHK_ICON, 'Name-Match Affidavit')}
+      </div>
+
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 12px"></div>
+
+      <div id="allDocsSuccess" style="background:var(--surface-ghost);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;overflow:hidden">
+        <img src="success.gif" width="64" height="64" alt="" style="display:block">
+        <p style="font-family:'JioType',sans-serif;font-size:16px;font-weight:700;color:var(--text-high);text-align:center;margin:0">All documents verified!</p>
+        <p style="font-family:'JioType',sans-serif;font-size:14px;font-weight:400;color:var(--text-low);text-align:center;margin:0;line-height:1.4">Aadhaar, Land Record, Bank Passbook, Passport Photo &amp; Affidavit are all in order.</p>
+      </div>
+
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+      <p style="font-family:'JioType',sans-serif;font-size:15px;font-weight:400;color:var(--text-high);line-height:1.4;margin:0 0 12px">You are ready to submit your <strong>PM Kisan Samman Nidhi</strong> application. Go to the official portal and fill the form:</p>
+      <a href="https://pmkisan.gov.in/RegistrationFormNew.aspx" target="_blank" style="display:flex;align-items:center;justify-content:space-between;background:var(--surface-ghost);border-radius:12px;padding:12px 14px;text-decoration:none;gap:8px">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span style="font-family:'JioType',sans-serif;font-size:13px;font-weight:700;color:var(--primary-50)">pmkisan.gov.in</span>
+          <span style="font-family:'JioType',sans-serif;font-size:12px;font-weight:400;color:var(--text-low)">New Farmer Registration &rarr; Fill form &rarr; Submit OTP</span>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="var(--primary-50)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>`;
+    msgs.appendChild(botRow);
+    requestAnimationFrame(() => scrollToBottom(msgs));
+  }, 3700);
+}
+
+/* Send message (text input) */
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('chatPlaceholder').style.display = '';
+
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>${escapeHtml(text)}</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+
+  // If on home screen, navigate to chat first then handle as generic message
+  if (currentNavIdx === 0) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('s1').classList.add('active');
+    currentNavIdx = 1;
+    activeFlow = 'scheme';
+    flowStep = 0;
+    document.getElementById('chatMessages').innerHTML = '';
+    document.getElementById('appTitle').textContent = 'Sarkar Saathi';
+    const msgs = document.getElementById('chatMessages');
+    const uRow = document.createElement('div');
+    uRow.className = 'msg-user-row';
+    uRow.style.animation = 'msgSlideIn 0.22s ease';
+    uRow.innerHTML = `<div class="msg-user"><p>${escapeHtml(text)}</p></div>`;
+    msgs.appendChild(uRow);
+    const t2 = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t2);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p>I can help with that. Which of these best describes what you need?</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <div class="chips-row" style="margin:0">
+          <button class="chip" onclick="handleChip('Find schemes I am eligible for')">Find my schemes</button>
+          <button class="chip" onclick="handleChip('Check documents needed')">Check documents</button>
+          <button class="chip" onclick="handleChip('Help fill a form')">Fill a form</button>
+          <button class="chip" onclick="handleChip('Track my application')">Track application</button>
+        </div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1000);
+    return;
+  }
+
+  // If waiting for reference number after successful submission
+  if (awaitingRefNumber) {
+    awaitingRefNumber = false;
+    showRefNumberConfirmed(text, msgs);
+    return;
+  }
+
+  // If waiting for error description after failed submission
+  if (awaitingErrorDesc) {
+    awaitingErrorDesc = false;
+    showErrorGuidance(text, msgs);
+    return;
+  }
+
+  // If waiting for tracker reference number
+  if (awaitingTrackerRef) {
+    awaitingTrackerRef = false;
+    trackerRef = text;
+    showTrackerConsentRequest(msgs);
+    return;
+  }
+
+  // Generic fallback
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p>I'm looking that up for you. To give the most accurate answer, could you tell me your state and whether you're applying for yourself or a family member?</p>
+      <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+      <div class="chips-row" style="margin:0">
+        <button class="chip" onclick="handleChip('For myself')">For myself</button>
+        <button class="chip" onclick="handleChip('For a family member')">For a family member</button>
+      </div>
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+  }, 1000);
+}
+
+/* Input helpers */
+function focusChatInput() {
+  document.getElementById('chatInput').focus();
+}
+
+function handleInputGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+  document.getElementById('chatPlaceholder').style.display = el.value ? 'none' : '';
+}
+
+function handleEnter(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+/* Time */
+function updateTime() {
+  const now = new Date();
+  document.getElementById('statusTime').textContent =
+    now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+}
+updateTime();
+setInterval(updateTime, 30000);
+</script>
+</body>
+</html>
