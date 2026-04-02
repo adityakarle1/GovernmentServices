@@ -543,20 +543,19 @@ body { font-family: 'JioType', sans-serif; background: var(--white); display: fl
     </div>
     <div class="anno-card">
       <div class="anno-title">MCP Servers</div>
-      <div class="anno-row"><span class="anno-key">claude.ai Figma</span><span class="anno-val" style="color:var(--text-low)">Auth n/a · not used</span></div>
-      <div class="anno-row" style="margin-top:6px"><span class="anno-key">JioBharatIQ</span><span class="anno-val">JDS v3.6.4</span></div>
+      <div class="anno-row"><span class="anno-key">JioBharatIQ</span><span class="anno-val">JDS v3.6.4</span></div>
       <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Tools used</span><span class="anno-val" style="text-align:right">get_assets<br>find_icon<br>lookup_component<br>resolve_token<br>validate_prototype</span></div>
-      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Figma refs</span><span class="anno-val" style="text-align:right">Card 8448:19350<br>Button 6046:8659</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Components</span><span class="anno-val" style="text-align:right">Button 6046:8659<br>Card 8448:19350<br>ServiceCard @jds/core</span></div>
     </div>
     <div class="anno-card">
       <div class="anno-title">Design System Audit</div>
-      <div class="anno-row"><span class="anno-key">Font</span><span class="anno-val">JioType (400, 500, 700)</span></div>
-      <div class="anno-row"><span class="anno-key">Design system</span><span class="anno-val">JDS v3.6.4</span></div>
-      <div class="anno-row"><span class="anno-key">Figma nodes</span><span class="anno-val">2 (Card, Button)</span></div>
-      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">validate_prototype</span><span class="anno-val" style="text-align:right">~20 warnings<br><span style="color:var(--text-low);font-size:11px">:root token defs (false +ve) · layout px</span></span></div>
+      <div class="anno-row"><span class="anno-key">Audit date</span><span class="anno-val">2 Apr 2026</span></div>
+      <div class="anno-row"><span class="anno-key">Tool</span><span class="anno-val">validate_prototype v3.6.4</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Result</span><span class="anno-val" style="text-align:right">51 flagged<br><span style="color:var(--text-low);font-size:11px">26 color (false +ve in :root)<br>25 spacing (layout chrome)</span></span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Fixed</span><span class="anno-val" style="text-align:right;color:var(--success)">Phone frame tokens<br>CHK_ICON SVG colors<br>Numbered badge tokens<br>Opacity → text-low token<br>Section spacing tokens</span></div>
       <div class="anno-row" style="margin-top:6px"><span class="anno-key" style="font-weight:700">JDS match</span><span class="anno-val" style="font-weight:700;color:var(--success)">91%</span></div>
-      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Compliant</span><span class="anno-val" style="text-align:right">JioType · Colors<br>Spacing tokens · Icons<br>JBIQ Thinking state<br>Buttons · Chips · Opacity</span></div>
-      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px;color:var(--warning)">Residual</span><span class="anno-val" style="text-align:right;color:var(--warning)">Service cards (custom)<br>Timeline (custom)<br>Form step (custom)<br>Layout outer px</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px">Compliant</span><span class="anno-val" style="text-align:right">JioType 400/500/700<br>All color tokens<br>Spacing tokens<br>Icons (JDS SVG lib)<br>JBIQ Thinking state<br>Buttons · Chips · Opacity</span></div>
+      <div class="anno-row" style="align-items:flex-start"><span class="anno-key" style="padding-top:1px;color:var(--warning)">Residual</span><span class="anno-val" style="text-align:right;color:var(--warning)">ServiceCard (custom CSS)<br>Timeline (custom)<br>Form step (custom)<br>Outer layout px (chrome)</span></div>
     </div>
   </div>
 
