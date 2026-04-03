@@ -1534,15 +1534,30 @@ function handleFormServiceSelect(name) {
   const t = appendThinking(msgs);
   setTimeout(() => {
     msgs.removeChild(t);
-    const botRow = document.createElement('div');
-    botRow.className = 'msg-bot-row msg-bot-response';
-    botRow.style.animation = 'msgSlideIn 0.22s ease';
-    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
-      <p style="margin-bottom:12px">Let's fill the <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(name)}</strong> form together. I'll guide you one step at a time.</p>
-      ${formStep1Html()}
+    // Card 1: document readiness checklist with tick/warning marks
+    const checkRow = document.createElement('div');
+    checkRow.className = 'msg-bot-row msg-bot-response';
+    checkRow.style.animation = 'msgSlideIn 0.22s ease';
+    checkRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Here's a quick document check for <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(name)}</strong>:</p>
+      ${docChecklistHtml(name)}
     </div>`;
-    msgs.appendChild(botRow);
-    scrollToReveal(msgs, botRow);
+    msgs.appendChild(checkRow);
+    scrollToReveal(msgs, checkRow);
+    // Card 2: form co-pilot
+    const t2 = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t2);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p style="margin-bottom:12px">Let's fill the <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(name)}</strong> form together. I'll guide you one step at a time.</p>
+        ${formStep1Html()}
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1000);
   }, 1200);
 }
 
@@ -1799,26 +1814,44 @@ function showRefNumberConfirmed(ref, msgs) {
   const t = appendThinking(msgs);
   setTimeout(() => {
     msgs.removeChild(t);
-    const botRow = document.createElement('div');
-    botRow.className = 'msg-bot-row msg-bot-response';
-    botRow.style.animation = 'msgSlideIn 0.22s ease';
-    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
-      <div style="background:rgba(37,171,33,0.06);border:1px solid rgba(37,171,33,0.16);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div>
-          <div style="font-family:'JioType',sans-serif;font-size:15px;font-weight:700;color:var(--text-high);margin-bottom:4px">Reference number saved!</div>
-          <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4">Ref: <strong style="font-weight:700;color:var(--text-high);font-family:'JioType',sans-serif">${escapeHtml(ref)}</strong></div>
-          <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4;margin-top:2px">You can use this number anytime to check your application status.</div>
-        </div>
-      </div>
-      <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 10px"></div>
-      <div class="chips-row" style="margin:0">
-        <button class="chip" onclick="startTrackerWithRef('${escapeHtml(ref)}')">Track this application</button>
-        <button class="chip" onclick="startFlow('scheme')">Find more schemes</button>
+    // Card 1: success GIF congratulations
+    const celebRow = document.createElement('div');
+    celebRow.className = 'msg-bot-row msg-bot-response';
+    celebRow.style.animation = 'msgSlideIn 0.22s ease';
+    celebRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <div style="background:var(--surface-ghost);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;overflow:hidden">
+        <img src="success.gif" width="64" height="64" alt="" style="display:block">
+        <p style="font-family:'JioType',sans-serif;font-size:16px;font-weight:700;color:var(--text-high);text-align:center;margin:0">Application submitted!</p>
+        <p style="font-family:'JioType',sans-serif;font-size:14px;font-weight:400;color:var(--text-low);text-align:center;margin:0;line-height:1.4">Congratulations! Your application has been successfully submitted to the government portal.</p>
       </div>
     </div>`;
-    msgs.appendChild(botRow);
-    scrollToReveal(msgs, botRow);
+    msgs.appendChild(celebRow);
+    scrollToReveal(msgs, celebRow);
+    // Card 2: reference number saved
+    const t2 = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t2);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <div style="background:rgba(37,171,33,0.06);border:1px solid rgba(37,171,33,0.16);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <div style="font-family:'JioType',sans-serif;font-size:15px;font-weight:700;color:var(--text-high);margin-bottom:4px">Reference number saved!</div>
+            <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4">Ref: <strong style="font-weight:700;color:var(--text-high);font-family:'JioType',sans-serif">${escapeHtml(ref)}</strong></div>
+            <div style="font-family:'JioType',sans-serif;font-size:13px;font-weight:400;color:var(--text-low);line-height:1.4;margin-top:2px">You can use this number anytime to check your application status.</div>
+          </div>
+        </div>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:0 0 10px"></div>
+        <div class="chips-row" style="margin:0">
+          <button class="chip" onclick="startTrackerWithRef('${escapeHtml(ref)}')">Track this application</button>
+          <button class="chip" onclick="startFlow('scheme')">Find more schemes</button>
+        </div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1000);
   }, 800);
 }
 
