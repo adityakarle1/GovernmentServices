@@ -483,6 +483,17 @@ body { font-family: 'JioType', sans-serif; background: var(--white); display: fl
                 </div>
                 <svg class="service-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="var(--text-low)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
+
+              <div class="service-card" onclick="startFlow('service')" style="animation-delay:0.2s;grid-column:1/-1;flex-direction:row;align-items:center">
+                <div class="service-card-icon" style="background:var(--error);opacity:1;flex-shrink:0">
+                  <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_form_add.svg" width="20" height="20" style="filter:brightness(0) invert(1)">
+                </div>
+                <div class="service-card-body">
+                  <div class="service-card-title">Apply for Govt. Service</div>
+                  <div class="service-card-sub">Aadhaar, PAN, Passport, Voter ID and more</div>
+                </div>
+                <svg class="service-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="var(--text-low)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
             </div>
           </div>
 
@@ -582,7 +593,7 @@ function scrollToReveal(container, el) {
 }
 
 /* Shared icon constants */
-const CHK_ICON = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="10" cy="10" r="10" style="fill:var(--success)"/><path d="M6 10.4l2.8 2.6 5.2-5.4" style="stroke:var(--text-on-bold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CHK_ICON = `<img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_success_colored.svg" width="20" height="20" style="flex-shrink:0;margin-top:1px">`;
 const WRN_ICON = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="10" cy="10" r="10" style="fill:var(--warning)"/><path d="M10 6v5M10 13.5v1" stroke="var(--white)" stroke-width="1.8" stroke-linecap="round"/></svg>`;
 
 /* Reusable list row renderers */
@@ -600,7 +611,7 @@ function numberedRow(n, item, note) {
 }
 
 /* State */
-let activeFlow = null; // 'scheme' | 'doc' | 'form' | 'tracker'
+let activeFlow = null; // 'scheme' | 'doc' | 'form' | 'tracker' | 'service'
 let flowStep = 0;
 let afterMismatchCorrection = false;
 let docFlowScheme = null;
@@ -611,6 +622,7 @@ let awaitingErrorDesc = false;
 let awaitingTrackerRef = false;
 let trackerService = null;
 let trackerRef = null;
+let serviceSelected = null; // service chosen in Apply Govt. Service flow
 
 /* Nav switching */
 function switchNav(screenIdx, el, flow) {
@@ -676,12 +688,13 @@ function initFlow(flow) {
   msgs.innerHTML = '';
 
   const titles = {
-    scheme: 'Find My Schemes',
-    doc:    'Document Check',
-    form:   'Form Co-Pilot',
-    tracker:'Track Application'
+    scheme:  'Find My Schemes',
+    doc:     'Document Check',
+    form:    'Form Co-Pilot',
+    tracker: 'Track Application',
+    service: 'Apply for Govt. Service'
   };
-  document.getElementById('appTitle').textContent = titles[flow];
+  document.getElementById('appTitle').textContent = titles[flow] || 'Sarkar Saathi';
 
   const greetings = {
     scheme: {
@@ -701,6 +714,26 @@ function initFlow(flow) {
       chips: ['Aadhaar Card', 'PAN Card', 'Passport', 'PM Kisan Samman Nidhi', 'Ayushman Bharat PMJAY', 'More\u2026']
     }
   };
+
+  if (flow === 'service') {
+    activeFlow = 'service';
+    flowStep = 0;
+    serviceSelected = null;
+    const serviceChips = ['Aadhaar Card', 'PAN Card', 'Passport', 'Voter ID', 'Driving Licence', 'Ration Card'];
+    setTimeout(() => {
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p>Which government service do you need help with?</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <div class="chips-row" style="margin:0">${serviceChips.map(c => `<button class="chip" onclick="handleChip('${c}')">${c}</button>`).join('')}</div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 200);
+    return;
+  }
 
   const g = greetings[flow];
   setTimeout(() => {
@@ -746,6 +779,7 @@ function handleChip(text) {
   else if (activeFlow === 'doc') handleDocChip(text, msgs);
   else if (activeFlow === 'form') handleFormChip(text, msgs);
   else if (activeFlow === 'tracker') handleTrackerChip(text, msgs);
+  else if (activeFlow === 'service') handleServiceChip(text, msgs);
 }
 
 /* Thinking helper */
@@ -756,6 +790,111 @@ function appendThinking(msgs) {
   t.innerHTML = THINKING_HTML;
   msgs.appendChild(t);
   return t;
+}
+
+/* APPLY GOVT. SERVICE FLOW */
+const SERVICE_UPDATE_OPTIONS = {
+  'Aadhaar Card':    ['Name change', 'Address change', 'Date of birth update', 'Mobile number link', 'Biometric update'],
+  'PAN Card':        ['Name correction', 'Date of birth correction', 'Address update', 'Link with Aadhaar'],
+  'Passport':        ['Renewal', 'Address change', 'Name change', 'Add spouse name'],
+  'Voter ID':        ['Name correction', 'Address change', 'Photo update', 'Date of birth correction'],
+  'Driving Licence': ['Renewal', 'Address change', 'Name change', 'Add vehicle class'],
+  'Ration Card':     ['Add family member', 'Remove family member', 'Address change', 'Name correction'],
+};
+
+const SERVICE_PORTALS = {
+  'Aadhaar Card':    { name: 'Aadhaar Card', desc: 'New enrolment or update', url: 'myaadhaar.uidai.gov.in', href: 'https://myaadhaar.uidai.gov.in', bg: 'var(--surface-ghost-icon)', color: 'var(--primary-50)' },
+  'PAN Card':        { name: 'PAN Card', desc: 'Apply new or correction', url: 'incometax.gov.in', href: 'https://eportal.incometax.gov.in', bg: 'var(--secondary-20)', color: 'var(--secondary-50)' },
+  'Passport':        { name: 'Passport', desc: 'Apply or renew passport', url: 'passportindia.gov.in', href: 'https://passportindia.gov.in', bg: 'var(--sparkle-20)', color: 'var(--sparkle-50)' },
+  'Voter ID':        { name: 'Voter ID', desc: 'Register or update voter card', url: 'voterportal.eci.gov.in', href: 'https://voterportal.eci.gov.in', bg: 'var(--grey-20)', color: 'var(--grey-60)' },
+  'Driving Licence': { name: 'Driving Licence', desc: 'Apply or renew licence', url: 'sarathi.parivahan.gov.in', href: 'https://sarathi.parivahan.gov.in', bg: 'var(--secondary-20)', color: 'var(--secondary-50)' },
+  'Ration Card':     { name: 'Ration Card', desc: 'New application or update', url: 'State e-district portal', href: '#', bg: 'var(--surface-ghost-icon)', color: 'var(--primary-50)' },
+};
+
+function handleServiceChip(text, msgs) {
+  const t = appendThinking(msgs);
+
+  if (flowStep === 0) {
+    // Service selected → ask Update or Apply new
+    serviceSelected = text;
+    flowStep = 1;
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p>Would you like to <strong style="font-weight:700;color:var(--text-high)">update your current ${escapeHtml(text)}</strong> or <strong style="font-weight:700;color:var(--text-high)">apply for a new one</strong>?</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <div class="chips-row" style="margin:0">
+          <button class="chip" onclick="handleChip('Update current')">Update current</button>
+          <button class="chip" onclick="handleChip('Apply new')">Apply new</button>
+        </div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 900);
+
+  } else if (flowStep === 1 && text === 'Update current') {
+    // Show update sub-options for selected service
+    flowStep = 2;
+    const options = SERVICE_UPDATE_OPTIONS[serviceSelected] || ['Name change', 'Address change', 'Other'];
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p>What would you like to update on your <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(serviceSelected)}</strong>?</p>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <div class="chips-row" style="margin:0">${options.map(o => `<button class="chip" onclick="handleChip('${escapeHtml(o)}')">${escapeHtml(o)}</button>`).join('')}</div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 900);
+
+  } else if (flowStep === 1 && text === 'Apply new') {
+    // Apply new → show portal card, clicking it starts co-pilot
+    flowStep = 2;
+    const portal = SERVICE_PORTALS[serviceSelected] || { name: serviceSelected, desc: 'Official government portal', url: 'india.gov.in', href: 'https://india.gov.in', bg: 'var(--surface-ghost-icon)', color: 'var(--primary-50)' };
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p style="margin-bottom:12px">Here's where you can apply for a new <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(serviceSelected)}</strong>:</p>
+        ${formListItemHtml(portal, false)}
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 900);
+
+  } else if (flowStep === 2) {
+    // Update sub-option selected → show guidance + portal button
+    const portal = SERVICE_PORTALS[serviceSelected] || { url: 'india.gov.in', href: 'https://india.gov.in' };
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+        <p style="margin-bottom:12px">To do a <strong style="font-weight:700;color:var(--text-high)">${escapeHtml(text)}</strong> on your ${escapeHtml(serviceSelected)}, here's what you'll need:</p>
+        <div style="display:flex;flex-direction:column;gap:8px;padding:4px 0">
+          ${numberedRow(1, 'Keep your current <strong style="font-weight:700">' + escapeHtml(serviceSelected) + '</strong> and a valid address/identity proof ready', null)}
+          ${numberedRow(2, 'Visit the official portal or your nearest service centre', null)}
+          ${numberedRow(3, 'Submit the update request — changes reflect within <strong style="font-weight:700">7–15 working days</strong>', null)}
+        </div>
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        ${formListItemHtml(portal, false)}
+        <div class="chips-row" style="margin:0">
+          <button class="chip" onclick="startFlow('service')">Check another service</button>
+        </div>
+      </div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 1000);
+  }
 }
 
 /* SCHEME FINDER FLOW */
@@ -848,6 +987,11 @@ function handleSchemeChip(text, msgs) {
       botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
         <p style="margin-bottom:12px">Based on your profile, I found <strong style="font-weight:700;color:var(--text-high)">9 schemes</strong> you're eligible for. Here are the top 3:</p>
         ${schemeResultsHtml()}
+        <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
+        <p style="font-family:'JioType',sans-serif;font-size:16px;font-weight:400;color:var(--text-high);line-height:1.3;margin:8px 0">Already applied for a scheme?</p>
+        <div class="chips-row" style="margin:0;padding:8px 0">
+          <button class="chip" onclick="handleSchemeTrackApplication(this)">Track application</button>
+        </div>
       </div>`;
       msgs.appendChild(botRow);
       requestAnimationFrame(() => scrollToBottom(msgs));
@@ -857,26 +1001,24 @@ function handleSchemeChip(text, msgs) {
 
 function schemeResultsHtml() {
   const schemes = [
-    { name: 'PM Kisan Samman Nidhi', benefit: '₹6,000/year direct to bank account', tag: 'Direct Benefit Transfer', iconVar: '--primary-50' },
-    { name: 'PM Fasal Bima Yojana', benefit: 'Crop insurance coverage up to ₹2 lakh', tag: 'Agricultural Insurance', iconVar: '--sparkle-50' },
-    { name: 'PM Awas Yojana (Rural)', benefit: 'Subsidy up to ₹1.2 lakh for home construction', tag: 'Housing Benefit', iconVar: '--secondary-50' },
+    { name: 'PM Kisan Samman Nidhi', desc: '₹6,000/year direct to bank account', url: 'pmkisan.gov.in', href: 'https://pmkisan.gov.in', bg: 'var(--surface-ghost-icon)', color: 'var(--primary-50)' },
+    { name: 'PM Fasal Bima Yojana', desc: 'Crop insurance coverage up to ₹2 lakh', url: 'pmfby.gov.in', href: 'https://pmfby.gov.in', bg: 'var(--sparkle-20)', color: 'var(--sparkle-50)' },
+    { name: 'PM Awas Yojana (Rural)', desc: 'Subsidy up to ₹1.2 lakh for home construction', url: 'pmayg.nic.in', href: 'https://pmayg.nic.in', bg: 'var(--secondary-20)', color: 'var(--secondary-50)' },
   ];
-  return schemes.map(s => `
-    <div class="scheme-card">
-      <div class="scheme-card-hd">
-        <div class="scheme-card-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="color:var(${s.iconVar})"><path d="M20 8V6a3 3 0 00-3-3h-1.28A2 2 0 0014 2h-4a2 2 0 00-1.72 1H7a3 3 0 00-3 3v13a3 3 0 003 3h10a3 3 0 003-3v-1a2 2 0 002-2v-6a2 2 0 00-2-2zm-2 11a1 1 0 01-1 1H7a1 1 0 01-1-1V6a1 1 0 011-1h1.28A2 2 0 0010 6h4a2 2 0 001.72-1H17a1 1 0 011 1v2h-6a2 2 0 00-2 2v6a2 2 0 002 2h6v1zm.71-6.79l-3 3a1.002 1.002 0 01-1.42 0l-1-1a1.004 1.004 0 111.42-1.42l.29.3 2.29-2.3a1.004 1.004 0 111.42 1.42z" fill="currentColor"/></svg>
-        </div>
-        <div>
-          <div class="scheme-card-name">${s.name}</div>
-          <div class="scheme-card-benefit">${s.benefit}</div>
-        </div>
-      </div>
-      <div class="scheme-card-divider"></div>
-      <div class="scheme-card-footer">
-        <button class="scheme-apply-btn" onclick="showSchemeDocuments('${escapeHtml(s.name)}')">Apply Now</button>
-      </div>
-    </div>`).join('');
+  return `<div style="display:flex;flex-direction:column;gap:8px">${schemes.map(s => formListItemHtml(s, true)).join('')}</div>`;
+}
+
+function handleSchemeTrackApplication(btn) {
+  btn.closest('.msg-bot').querySelectorAll('.chip').forEach(b => { b.disabled = true; b.style.opacity = '0.38'; });
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Track application</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  activeFlow = 'tracker';
+  showTrackerConsentRequest(msgs);
 }
 
 const SCHEME_DOCS = {
@@ -1218,6 +1360,62 @@ function handleDocVerifyYes(btn) {
   }, 900);
 }
 
+function handleDocCompleteScheme(btn) {
+  btn.closest('.msg-bot').querySelectorAll('.chip').forEach(b => b.disabled = true);
+  btn.style.opacity = '0.38';
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Search for schemes</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Select the scheme you want to apply for:</p>
+      ${formSchemeListHtml(false)}
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+    activeFlow = 'form';
+    formBranch = 'scheme';
+    flowStep = 1;
+  }, 900);
+}
+
+function handleDocCompleteService(btn) {
+  btn.closest('.msg-bot').querySelectorAll('.chip').forEach(b => b.disabled = true);
+  btn.style.opacity = '0.38';
+  const msgs = document.getElementById('chatMessages');
+  const uRow = document.createElement('div');
+  uRow.className = 'msg-user-row';
+  uRow.style.animation = 'msgSlideIn 0.22s ease';
+  uRow.innerHTML = `<div class="msg-user"><p>Govt. Service</p></div>`;
+  msgs.appendChild(uRow);
+  scrollToReveal(msgs, uRow);
+  const t = appendThinking(msgs);
+  setTimeout(() => {
+    msgs.removeChild(t);
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-bot-row msg-bot-response';
+    botRow.style.animation = 'msgSlideIn 0.22s ease';
+    botRow.innerHTML = `${BOT_AVATAR}<div class="msg-bot">
+      <p style="margin-bottom:12px">Select the government service you need help with:</p>
+      ${formServiceListHtml(false)}
+    </div>`;
+    msgs.appendChild(botRow);
+    scrollToReveal(msgs, botRow);
+    activeFlow = 'form';
+    formBranch = 'service';
+    flowStep = 1;
+  }, 900);
+}
+
 function docChecklistHtml(scheme) {
   const common = [
     { name: 'Aadhaar Card', have: true },
@@ -1302,20 +1500,24 @@ function formListItemHtml(item, isScheme) {
       <div style="font-family:'JioType',sans-serif;font-size:14px;font-weight:700;color:var(--text-high);line-height:1.2">${item.name}</div>
       <div style="font-family:'JioType',sans-serif;font-size:12px;font-weight:400;color:var(--text-low);margin-top:1px;line-height:1.3">${item.desc}</div>
     </div>
-    <a href="${item.href}" target="_blank" onclick="event.stopPropagation()" style="flex-shrink:0;height:28px;padding:0 10px;border-radius:999px;border:1px solid var(--stroke-subtle);background:var(--white);font-family:'JioType',sans-serif;font-size:11px;font-weight:500;color:var(--primary-50);display:flex;align-items:center;text-decoration:none;white-space:nowrap">${item.url}</a>
+    <a href="${item.href}" target="_blank" onclick="event.stopPropagation()" style="flex-shrink:0;max-width:130px;height:28px;padding:0 10px;border-radius:999px;border:1px solid var(--stroke-subtle);background:var(--white);font-family:'JioType',sans-serif;font-size:11px;font-weight:500;color:var(--primary-50);display:flex;align-items:center;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.url}</a>
   </div>`;
 }
 
 function formSchemeListHtml(expanded) {
   const items = expanded ? FORM_SCHEMES_MORE : FORM_SCHEMES;
-  const moreChip = !expanded ? `<div style="height:0.5px;background:var(--stroke-subtle);margin:4px 0 8px"></div><div class="chips-row" style="margin:0"><button class="chip" onclick="handleChip('More schemes')">More schemes</button></div>` : '';
-  return `<div style="display:flex;flex-direction:column;gap:8px">${items.map(i => formListItemHtml(i, true)).join('')}${moreChip}</div>`;
+  const footer = !expanded
+    ? `<div style="height:0.5px;background:var(--stroke-subtle);margin:4px 0 8px"></div><div class="chips-row" style="margin:0"><button class="chip" onclick="handleChip('More schemes')">More schemes</button></div>`
+    : `<div style="height:0.5px;background:var(--stroke-subtle);margin:4px 0 8px"></div><div class="chips-row" style="margin:0"><button class="chip" onclick="handleChip('Govt. Service')">Govt. Service (Aadhaar, Passport…)</button></div>`;
+  return `<div style="display:flex;flex-direction:column;gap:8px">${items.map(i => formListItemHtml(i, true)).join('')}${footer}</div>`;
 }
 
 function formServiceListHtml(expanded) {
   const items = expanded ? FORM_SERVICES_MORE : FORM_SERVICES;
-  const moreChip = !expanded ? `<div style="height:0.5px;background:var(--stroke-subtle);margin:4px 0 8px"></div><div class="chips-row" style="margin:0"><button class="chip" onclick="handleChip('More')">More</button></div>` : '';
-  return `<div style="display:flex;flex-direction:column;gap:8px">${items.map(i => formListItemHtml(i, false)).join('')}${moreChip}</div>`;
+  const footer = !expanded
+    ? `<div style="height:0.5px;background:var(--stroke-subtle);margin:4px 0 8px"></div><div class="chips-row" style="margin:0"><button class="chip" onclick="handleChip('More')">More</button></div>`
+    : `<div style="height:0.5px;background:var(--stroke-subtle);margin:4px 0 8px"></div><div class="chips-row" style="margin:0"><button class="chip" onclick="handleChip('Search for schemes')">Search for schemes</button></div>`;
+  return `<div style="display:flex;flex-direction:column;gap:8px">${items.map(i => formListItemHtml(i, false)).join('')}${footer}</div>`;
 }
 
 function handleFormServiceSelect(name) {
@@ -1326,6 +1528,8 @@ function handleFormServiceSelect(name) {
   uRow.innerHTML = `<div class="msg-user"><p>${escapeHtml(name)}</p></div>`;
   msgs.appendChild(uRow);
   scrollToReveal(msgs, uRow);
+  activeFlow = 'form';
+  formBranch = 'scheme';
   flowStep = 2;
   const t = appendThinking(msgs);
   setTimeout(() => {
@@ -1367,6 +1571,25 @@ function handleFormChip(text, msgs) {
       msgs.appendChild(botRow);
       scrollToReveal(msgs, botRow);
     }, 1000);
+    return;
+  }
+
+  if (text === 'Search for schemes' || text === 'Govt. Service') {
+    const isScheme = text === 'Search for schemes';
+    formBranch = isScheme ? 'scheme' : 'service';
+    flowStep = 1;
+    const t = appendThinking(msgs);
+    setTimeout(() => {
+      msgs.removeChild(t);
+      const botRow = document.createElement('div');
+      botRow.className = 'msg-bot-row msg-bot-response';
+      botRow.style.animation = 'msgSlideIn 0.22s ease';
+      botRow.innerHTML = isScheme
+        ? `${BOT_AVATAR}<div class="msg-bot"><p style="margin-bottom:12px">Select the scheme you want to apply for:</p>${formSchemeListHtml(false)}</div>`
+        : `${BOT_AVATAR}<div class="msg-bot"><p style="margin-bottom:12px">Select the government service you need help with:</p>${formServiceListHtml(false)}</div>`;
+      msgs.appendChild(botRow);
+      scrollToReveal(msgs, botRow);
+    }, 700);
     return;
   }
 
@@ -1881,16 +2104,16 @@ function showTrackerStatus(msgs) {
 
 function startTrackerWithRef(ref) {
   activeFlow = 'tracker';
+  trackerRef = ref;
   const msgs = document.getElementById('chatMessages');
   document.getElementById('appTitle').textContent = 'Track Application';
-
   const uRow = document.createElement('div');
   uRow.className = 'msg-user-row';
   uRow.style.animation = 'msgSlideIn 0.22s ease';
-  uRow.innerHTML = `<div class="msg-user"><p>${escapeHtml(ref)}</p></div>`;
+  uRow.innerHTML = `<div class="msg-user"><p>Track this application</p></div>`;
   msgs.appendChild(uRow);
   scrollToReveal(msgs, uRow);
-  showTrackerResult(ref, msgs);
+  showTrackerConsentRequest(msgs);
 }
 
 function showTrackerResult(ref, msgs) {
@@ -2027,9 +2250,40 @@ function handleChatPlus() {
   } else if (afterMismatchCorrection) {
     afterMismatchCorrection = false;
     simulateDocReupload();
+  } else if (awaitingTrackerRef) {
+    awaitingTrackerRef = false;
+    simulateTrackerRefUpload();
   } else {
     simulateDocUpload(null);
   }
+}
+
+function simulateTrackerRefUpload() {
+  const msgs = document.getElementById('chatMessages');
+  const progressRow = document.createElement('div');
+  progressRow.className = 'msg-bot-row';
+  progressRow.style.cssText = 'padding:6px 0;flex-direction:column;gap:6px;align-items:flex-start';
+  progressRow.innerHTML = `
+    <div style="display:flex;gap:10px;align-items:center">
+      <video width="32" height="32" autoplay loop muted playsinline style="border-radius:50%;flex-shrink:0;display:block"><source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Thinking_state.mp4" type="video/mp4"></video>
+      <span style="font-family:'JioType',sans-serif;font-size:14px;font-weight:500;color:var(--text-low);line-height:1.5">Reading screenshot…</span>
+    </div>
+    <div class="doc-progress-row" style="width:100%;padding-left:42px;box-sizing:border-box">
+      <div class="doc-progress-track"><div class="doc-progress-fill" id="trackerRefFill"></div></div>
+    </div>`;
+  msgs.appendChild(progressRow);
+  scrollToBottom(msgs);
+  setTimeout(() => { const f = document.getElementById('trackerRefFill'); if (f) f.style.width = '100%'; }, 60);
+  setTimeout(() => {
+    progressRow.remove();
+    trackerRef = 'REF-2025-UP-' + Math.floor(10000 + Math.random() * 90000);
+    const uRow = document.createElement('div');
+    uRow.className = 'msg-user-row';
+    uRow.style.animation = 'msgSlideIn 0.22s ease';
+    uRow.innerHTML = `<div class="msg-user"><p>[Screenshot uploaded]</p></div>`;
+    msgs.appendChild(uRow);
+    showTrackerConsentRequest(msgs);
+  }, 3200);
 }
 
 function simulateDocReupload() {
@@ -2078,14 +2332,11 @@ function simulateDocReupload() {
       </div>
 
       <div style="height:0.5px;background:var(--stroke-subtle);margin:12px 0 10px"></div>
-      <p style="font-family:'JioType',sans-serif;font-size:15px;font-weight:400;color:var(--text-high);line-height:1.4;margin:0 0 12px">You are ready to submit your <strong>PM Kisan Samman Nidhi</strong> application. Go to the official portal and fill the form:</p>
-      <a href="https://pmkisan.gov.in/RegistrationFormNew.aspx" target="_blank" style="display:flex;align-items:center;justify-content:space-between;background:var(--surface-ghost);border-radius:12px;padding:12px 14px;text-decoration:none;gap:8px">
-        <div style="display:flex;flex-direction:column;gap:2px">
-          <span style="font-family:'JioType',sans-serif;font-size:13px;font-weight:700;color:var(--primary-50)">pmkisan.gov.in</span>
-          <span style="font-family:'JioType',sans-serif;font-size:12px;font-weight:400;color:var(--text-low)">New Farmer Registration &rarr; Fill form &rarr; Submit OTP</span>
-        </div>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="var(--primary-50)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <p style="font-family:'JioType',sans-serif;font-size:16px;font-weight:400;color:var(--text-high);line-height:1.3;margin:8px 0">How would you like to continue?</p>
+      <div class="chips-row" style="margin:0;padding:8px 0">
+        <button class="chip" onclick="handleDocCompleteScheme(this)">Search for schemes</button>
+        <button class="chip" onclick="handleDocCompleteService(this)">Govt. Service (Aadhaar, Passport…)</button>
+      </div>
     </div>`;
     msgs.appendChild(botRow);
     requestAnimationFrame(() => scrollToBottom(msgs));
